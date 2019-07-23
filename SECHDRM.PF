@@ -1,0 +1,26 @@
+000100081209     A*****************************************************************
+000200081209     A*                                                               *
+000300090227     A* Program ID...... SECHDRM                                      *
+000400090227     A* Program Desc.... Security Retrieval Header File               *
+000500090227     A*                                                               *
+000600141130     A* Written By...... Greg Cannella                                *
+000700090227     A* Date Written.... 02/27/09                                     *
+000800081209     A*                                                               *
+000900081209     A*****************************************************************
+001000081210     A                                      REF(REFERENCE)
+001100081210     A                                      UNIQUE
+001200090227     A          R SECHDRR
+001300090227     A            SHPGM     R               REFFLD(RFPGM)
+001400090227     A                                      COLHDG('Program Name')
+001500090227     A            SHSEQ          3A         COLHDG('Sequence')
+001600090227     A            SHDESC        50A         COLHDG('Description')
+001700090227     A            SHLDTE    R               REFFLD(RFDATE)
+001800081210     A                                      COLHDG('Last' 'Update' 'Date')
+001900090227     A            SHLTIM    R               REFFLD(RFTIME)
+002000081210     A                                      COLHDG('Last' 'Update' 'Time')
+002100090227     A            SHLUSR    R               REFFLD(RFUSER)
+002200090227     A                                      COLHDG('Last' 'Update' 'User')
+002300090227     A            SHLPGM    R               REFFLD(RFPGM)
+002400090227     A                                      COLHDG('Last' 'Update' 'Program')
+002500090227     A          K SHPGM
+002600090227     A          K SHSEQ

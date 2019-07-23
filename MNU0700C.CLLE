@@ -1,0 +1,97 @@
+000100141130/*******************************************************************/
+000200141130/*                                                                 */
+000300141130/*  Program Name:                                                  */
+000400141130/*                                                                 */
+000500141130/*  Description:                                                   */
+000600141130/*                                                                 */
+000700141130/*  Programmer:                                                    */
+000800141130/*                                                                 */
+000900141130/*  Date:                                                          */
+001000141130/*                                                                 */
+001100141130/*******************************************************************/
+001200141130/*                     Modification Log                            */
+001300141130/*                                                                 */
+001400141130/* Initials  Date     Description                                  */
+001500141130/*-----------------------------------------------------------------*/
+001600141130/*  XXX    XX/XX/XX  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+001700141130/*                                                                 */
+001800141130/*                                                                 */
+001900141130/*                                                                 */
+002000141130/*                                                                 */
+002100141130/*                                                                 */
+002200141130/*******************************************************************/
+002300141130             PGM        PARM(&CMDSTRING &CMDACTION &CMDMSGKEY)
+002400141130             DCL        VAR(&CMDSTRING) TYPE(*CHAR) LEN(2000)
+002500141130             DCL        VAR(&CMDACTION) TYPE(*CHAR) LEN(8)
+002600141130             DCL        VAR(&CMDMSGKEY) TYPE(*CHAR) LEN(4)
+002700141130             DCL        VAR(&APIDATA) TYPE(*CHAR) LEN(2000)
+002800141130             DCL        VAR(&APIMSGTYPE) TYPE(*CHAR) LEN(10)
+002900141130             DCL        VAR(&APIOPTIONS) TYPE(*CHAR) LEN(20)
+003000141130             DCL        VAR(&APILENGTH) TYPE(*CHAR) LEN(4)
+003100141130             DCL        VAR(&MSGKEY) TYPE(*CHAR) LEN(4)
+003200141130             DCL        VAR(&LENGTH) TYPE(*DEC) LEN(9 0)
+003300141130             DCL        VAR(&CMDERROR) TYPE(*LGL)
+003400141130             DCL        VAR(&ERROR) TYPE(*LGL)
+003500141130             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(MOVEMSG))
+003600141130             IF         COND(&CMDACTION = RETRIEVE) THEN(GOTO +
+003700141130                          CMDLBL(RETRIEVE))
+003800141130             ELSE       CMD(IF COND(&CMDACTION = PROMPT *OR +
+003900141130                          &CMDACTION = EXECUTE) THEN(GOTO +
+004000141130                          CMDLBL(EXECUTE)))
+004100141130             ELSE       CMD(RETURN)
+004200000000RETRIEVE:
+004300141130             IF         COND(&CMDMSGKEY = '    ') THEN(CHGVAR +
+004400141130                          VAR(&APIMSGTYPE) VALUE(*LAST))
+004500141130             ELSE       CMD(CHGVAR VAR(&APIMSGTYPE) VALUE(*PRV))
+004600141130             CALL       PGM(QMHRTVRQ) PARM(&APIDATA X'000007D0' +
+004700141130                          'RTVQ0100' &APIMSGTYPE &CMDMSGKEY +
+004800141130                          X'00000000')
+004900141130             CHGVAR     VAR(&APILENGTH) VALUE(%SST(&APIDATA 5 4))
+005000141130             CHGVAR     VAR(&LENGTH) VALUE(%BIN(&APILENGTH))
+005100141130             IF         COND(&LENGTH *LE 0) THEN(RETURN)
+005200141130             CHGVAR     VAR(&CMDSTRING) VALUE(%SST(&APIDATA 41 +
+005300141130                          &LENGTH))
+005400141130             CHGVAR     VAR(&CMDMSGKEY) VALUE(%SST(&APIDATA 9 4))
+005500141130             RETURN
+005600000000EXECUTE:
+005700141130             CHGVAR     VAR(%BIN(&APIOPTIONS 1 4)) VALUE(2)
+005800141130             CHGVAR     VAR(%SST(&APIOPTIONS 5 1)) VALUE('0')
+005900141130             CHGVAR     VAR(%SST(&APIOPTIONS 7 1)) VALUE('0')
+006000141130             IF         COND(&CMDACTION = 'PROMPT') THEN(CHGVAR +
+006100141130                          VAR(%SST(&APIOPTIONS 6 1)) VALUE('1'))
+006200141130             ELSE       CMD(CHGVAR VAR(%SST(&APIOPTIONS 6 1)) +
+006300141130                          VALUE('0'))
+006400141130             CHGVAR     VAR(%BIN(&APIOPTIONS 8 4)) VALUE(0)
+006500141130             CHGVAR     VAR(%BIN(&APIOPTIONS 12 4)) VALUE(0)
+006600141130             CHGVAR     VAR(%BIN(&APIOPTIONS 16 4)) VALUE(0)
+006700141130             CHGVAR     VAR(%BIN(&APIOPTIONS 19 2)) VALUE(0)
+006800141130             CALL       PGM(QCAPCMD) PARM(&CMDSTRING X'000007D0' +
+006900141130                          &APIOPTIONS X'00000014' 'CPOP0100' +
+007000141130                          &APIDATA X'000007D0' &APILENGTH X'00000000')
+007100141130             MONMSG     MSGID(CPF9999) EXEC(DO)
+007200141130             RCVMSG     PGMQ(*SAME) MSGTYPE(*EXCP)
+007300141130             CHGVAR     VAR(&CMDERROR) VALUE('1')
+007400141130             ENDDO
+007500141130             MONMSG     MSGID(CPF0000) EXEC(CHGVAR VAR(&CMDERROR) +
+007600141130                          VALUE('1'))
+007700141130             CHGVAR     VAR(&LENGTH) VALUE(%BIN(&APILENGTH))
+007800141130             IF         COND(&CMDACTION = PROMPT *AND &LENGTH > 0) +
+007900141130                          THEN(DO)
+008000141130             CHGVAR     VAR(&CMDSTRING) VALUE(%SST(&APIDATA 1 &LENGTH))
+008100141130             ENDDO
+008200000000ADDCMD:
+008300141130             SNDPGMMSG  MSG(&CMDSTRING) TOPGMQ(*EXT) MSGTYPE(*RQS) +
+008400141130                          KEYVAR(&MSGKEY)
+008500141130             RCVMSG     PGMQ(*EXT) MSGTYPE(*RQS) MSGKEY(&MSGKEY) +
+008600141130                          RMV(*NO) KEYVAR(&CMDMSGKEY)
+008700141130             IF         COND(*NOT &CMDERROR) THEN(DO)
+008800141130             CHGVAR     VAR(&CMDSTRING) VALUE(' ')
+008900141130             CHGVAR     VAR(&CMDMSGKEY) VALUE('    ')
+009000141130             ENDDO
+009100000000MOVEMSG:
+009200141130             IF         COND(&ERROR) THEN(RETURN)
+009300141130             CHGVAR     VAR(&ERROR) VALUE('1')
+009400141130             CALL       PGM(QMHMOVPM) PARM('    ' '*COMP     +
+009500141130                          *DIAG     *ESCAPE   *INFO     ' +
+009600141130                          X'00000004' '*' X'00000001' X'00000000')
+009700141130             ENDPGM

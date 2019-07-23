@@ -1,0 +1,38 @@
+000100101224      ********************************************************************
+000200101224      *
+000300120125      *  File: MNUMOVM
+000400101224      *
+000500120125      *  Description: Menu - Menu Override File
+000600101224      *
+000700101224      *  Programmer: Greg Cannella
+000800101224      *
+000900101224      *  Date: 12/24/10
+001000101224      *
+001100101224      ********************************************************************
+001200101224      *                   Modification Log
+001300101224      *
+001400101224      *  Initials  Date      Description
+001500101224      *-------------------------------------------------------------------
+001600101224      *   xxx    xx/xx/xx  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+001700101224      *
+001800101224      *
+001900101224      *
+002000101224      ********************************************************************
+002100101224      *                   Indicator Usage (Display)
+002200101224      *
+002300101224      *   Ind.   Description
+002400101224      *-------------------------------------------------------------------
+002500101224      *   xx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+002600101224      *
+002700101224      *
+002800101224      ********************************************************************
+002900120125     A          R MNUMOVMR
+003000120125     A            MMOPT         10          COLHDG('Menu Name')
+003100120125     A            MMUSER        10          COLHDG('User or Group')
+003200120125     A            MMLUDT         7S 0       COLHDG('Last Update Date')
+003300120125     A            MMLUTM         6S 0       COLHDG('Last Update Time')
+003400120125     A            MMLUUS        10          COLHDG('Last Update User')
+003500120125     A            MMLUPG        10          COLHDG('Last Update Program')
+003600101226      *
+003700120125     A          K MMOPT
+003800120125     A          K MMUSER

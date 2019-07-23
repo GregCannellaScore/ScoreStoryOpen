@@ -1,0 +1,106 @@
+000100120416     A*
+000200000000     A* File level keywords
+000300000000     A*
+000400110705     A                                      DSPSIZ(24 80 *DS3)
+000500110705     A                                      REF(*LIBL/REFFILE)
+000600110705     A                                      PRINT(*LIBL/QPRTKY)
+000700000000     A*
+000800000000     A* Subfile fields:
+000900000000     A*
+001000000000     A          R SCRNS01                   SFL
+001100000000     A            WSLIB         10A  O  8  2
+001200000000     A            WSPGM         10   O  8 13
+001300080403     A            WSFILEUSG      2Y 0O  8 24EDTCDE(Z)
+001400080403     A            WSTEXT        28   O  8 28
+001500090316     A            WSEND         23   O  8 57
+001600090316     A* 40        WSOBJREF      11   O  8 57
+001700090316     A* 40        WSOBJREFL     11   O  8 69
+001800090316     A*N40        WSATTR        10   O  8 57
+001900090316     A*N40        WSLASTUSED     7  0O  8 69EDTCDE(Y)
+002000000000     A*
+002100000000     A* Subfile control:
+002200110705     A          R SCRNC01                   SFLCTL(SCRNS01)
+002300110705     A                                      SFLSIZ(0015)
+002400110705     A                                      SFLPAG(0014)
+002500110705     A                                      CF03(03)
+002600110705     A                                      CF05(05)
+002700110705     A                                      CF11(11)
+002800110705     A                                      CF21(21)
+002900110705     A                                      ROLLDOWN(24)
+003000110705     A                                      ROLLUP(25)
+003100110705     A                                      RTNCSRLOC(&HDCSRR &HDCSRF &HDCSRP)
+003200110705     A                                      OVERLAY
+003300110705     A  32                                  SFLDSP
+003400110705     A N30                                  SFLDSPCTL
+003500110705     A  30                                  SFLCLR
+003600110705     A  34                                  SFLEND(*MORE)
+003700110705     A            THEFLD         1A  H
+003800110705     A            HDSFLP         4S 0H      SFLRCDNBR(CURSOR)
+003900110705     A            HDCSRR        10A  H
+004000110705     A            HDCSRF        10A  H
+004100110705     A            HDCSRP         4S 0H
+004200110705     A                                  1  2'REFSR'
+004300110705     A                                  1 35'References'
+004400110705     A                                      COLOR(WHT)
+004500110705     A                                  1 72DATE
+004600110705     A                                      EDTCDE(Y)
+004700110705     A                                  2  2USER
+004800110705     A                                  2 72TIME
+004900110705     A                                  4  2'Object .........:'
+005000110705     A                                      COLOR(WHT)
+005100110705     A            WCOBJ         11A  B  4 20CHANGE(60)
+005200110705     A                                      DSPATR(PC)
+005300110705     A            WCOBJ2        11A  B  4 32CHANGE(60)
+005400110705     A            WCOBJ3        11A  B  4 44CHANGE(60)
+005500110705     A            WCOBJ4        11A  B  4 56CHANGE(60)
+005600110705     A            WCOBJ5        11A  B  4 68CHANGE(60)
+005700110705     A                                  5  6'File Usage: 1=I,2=O,3=I/O,4=U,5=I/-
+005800110705     A                                      U,6=O/U,7=I/O/U,8=N/S,0=N/A'
+005900110705     A                                  6  2'DFU Only? (Y)'
+006000110705     A            WCDFU          1A  B  6 16CHANGE(60)
+006100110705     A                                  6 23'File'
+006200110705     A                                      DSPATR(HI)
+006300110705     A  40                              6 57'Object'
+006400110705     A                                      DSPATR(HI)
+006500110705     A                                  7  2'Library'
+006600110705     A                                      DSPATR(HI)
+006700110705     A                                  7 13'Program'
+006800110705     A                                      DSPATR(HI)
+006900110705     A                                  7 23'Usage'
+007000110705     A                                      DSPATR(HI)
+007100110705     A                                  7 29'Text Description'
+007200110705     A                                      DSPATR(HI)
+007300110705     A  40                              7 57'Refed'
+007400110705     A                                      DSPATR(HI)
+007500110705     A N40                              7 57'Type'
+007600110705     A                                      DSPATR(HI)
+007700110705     A  40                              7 69'Library'
+007800110705     A                                      DSPATR(HI)
+007900110705     A N40                              7 69'Last Used'
+008000110705     A                                      DSPATR(HI)
+008100000000     A* Command key descriptions:
+008200090316     A          R SCRNK01
+008300090316     A                                 23  3'F3=Exit'
+008400090316     A                                      COLOR(BLU)
+008500090316     A                                 23 28'F21=Print List'
+008600090316     A                                      COLOR(BLU)
+008700090316     A                                 23 13'F11=Alt View'
+008800090316     A                                      COLOR(BLU)
+008900000000      * Message subfile:
+009000000000      *
+009100000000     A          R MSGSFL1                   SFL
+009200000000     A                                      SFLMSGRCD(24)
+009300000000     A            MSGKEY                    SFLMSGKEY
+009400000000     A            DSPGMN                    SFLPGMQ
+009500000000      *
+009600000000      *
+009700000000      * Message subfile control:
+009800000000     A          R MSGCTL1                   SFLCTL(MSGSFL1)
+009900000000     A                                      OVERLAY
+010000000000     A N30                                  SFLEND
+010100000000     A N30                                  SFLDSP
+010200000000     A N30                                  SFLDSPCTL
+010300000000     A N30                                  SFLINZ
+010400000000     A                                      SFLSIZ(0005)
+010500000000     A                                      SFLPAG(0001)
+010600000000     A            DSPGMN                    SFLPGMQ

@@ -1,0 +1,28 @@
+000100081209     A*****************************************************************
+000200081209     A*                                                               *
+000300090227     A* Program ID...... SECDTLM                                      *
+000400090227     A* Program Desc.... Security Retrieval Detail File               *
+000500090227     A*                                                               *
+000600141130     A* Written By...... Greg Cannella                                *
+000700090227     A* Date Written.... 02/27/09                                     *
+000800081209     A*                                                               *
+000900081209     A*****************************************************************
+001000081210     A                                      REF(REFERENCE)
+001100081210     A                                      UNIQUE
+001200090227     A          R SECDTLR
+001300090227     A            SDPGM     R               REFFLD(RFPGM)
+001400090227     A                                      COLHDG('Program Name')
+001500090227     A            SDSEQ          3A         COLHDG('Sequence')
+001600090227     A            SDUSER    R               REFFLD(RFUSER)
+001700090227     A                                      COLHDG('User or Group')
+001800090227     A            SDLDTE    R               REFFLD(RFDATE)
+001900081210     A                                      COLHDG('Last' 'Update' 'Date')
+002000090227     A            SDLTIM    R               REFFLD(RFTIME)
+002100081210     A                                      COLHDG('Last' 'Update' 'Time')
+002200090227     A            SDLUSR    R               REFFLD(RFUSER)
+002300090227     A                                      COLHDG('Last' 'Update' 'User')
+002400090227     A            SDLPGM    R               REFFLD(RFPGM)
+002500090227     A                                      COLHDG('Last' 'Update' 'Program')
+002600090227     A          K SDPGM
+002700090227     A          K SDSEQ
+002800090227     A          K SDUSER

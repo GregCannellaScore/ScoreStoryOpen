@@ -1,0 +1,37 @@
+000001101224      ********************************************************************
+000002101224      *
+000003101226      *  File: MNUSYSM
+000004101224      *
+000005101226      *  Description: Menu system file
+000006101224      *
+000007101224      *  Programmer: Greg Cannella
+000008101224      *
+000009101224      *  Date: 12/24/10
+000010101224      *
+000011101224      ********************************************************************
+000012101224      *                   Modification Log
+000013101224      *
+000014101224      *  Initials  Date      Description
+000015101224      *-------------------------------------------------------------------
+000016101224      *   xxx    xx/xx/xx  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+000017101224      *
+000018101224      *
+000019101224      *
+000020101224      ********************************************************************
+000021101224      *                   Indicator Usage (Display)
+000022101224      *
+000023101224      *   Ind.   Description
+000024101224      *-------------------------------------------------------------------
+000025101224      *   xx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+000026101224      *
+000027101224      *
+000028101224      ********************************************************************
+000200101226     A          R MNUSYSMR
+000300101226     A            MSHEAD1       40          COLHDG('Heading 1')
+000400101226     A            MSHEAD2       40          COLHDG('Heading 2')
+000500101226     A            MSDFTPGM      10          COLHDG('Default Initial Pgm')
+000600101226     A            MSDFTMNU      10          COLHDG('Default Initial Menu')
+000700101228     A            MSLUDT         7S 0       COLHDG('Last Update Date')
+000800101228     A            MSLUTM         6S 0       COLHDG('Last Update Time')
+000900101228     A            MSLUUS        10          COLHDG('Last Update User')
+001000101228     A            MSLUPG        10          COLHDG('Last Update Program')

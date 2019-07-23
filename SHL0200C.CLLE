@@ -1,0 +1,124 @@
+000100000000/********************************************************************/
+000200000000/*                                                                  */
+000300150518/* Program ID...... XXX0200C                                        */
+000400000000/* Program Desc.... Work With                                       */
+000500000000/*                                                                  */
+000600000000/* Written By...... XXXXXXXXXXXX                                    */
+000700000000/* Date Written.... XX/XX/XX                                        */
+000800000000/* Request Number.. 1234                                            */
+000900000000/*                                                                  */
+001000000000/* Comments........                                                 */
+001100000000/*                                                                  */
+001200000000/*                                                                  */
+001300000000/********************************************************************/
+001400000000/* Compile Options:                                                 */
+001500000000/*                                                                  */
+001600000000/*                                                                  */
+001700000000/*                                                                  */
+001800000000/********************************************************************/
+001900000000/* Modifications:                                                   */
+002000000000/* Req#  By    Date       Modification                              */
+002100000000/* 1234  XXX   XX/XX/XX                                             */
+002200000000/*                                                                  */
+002300000000/********************************************************************/
+002400000000
+002500000000
+002600000000             PGM
+002700000000
+002800000000/*  Define and initialize calling paramaters                        */
+002900000000
+003000000000/* Error handling */
+003100000000             DCL        VAR(&JOB)         TYPE(*CHAR) LEN(10)
+003200000000             DCL        VAR(&USR)         TYPE(*CHAR) LEN(10)
+003300000000             DCL        VAR(&NBR)         TYPE(*CHAR) LEN(6)
+003400000000             DCL        VAR(&ERRMSG)      TYPE(*CHAR) LEN(200)
+003500000000             DCL        VAR(&DMPOPT)      TYPE(*CHAR) LEN(1)
+003600000000/* Job control */
+003700000000             DCL        VAR(&SVOUTQ)      TYPE(*CHAR) LEN(10)
+003800000000             DCL        VAR(&SVOUTQLIB)   TYPE(*CHAR) LEN(10)
+003900000000             DCL        VAR(&DTAARA)      TYPE(*CHAR) LEN(10)
+004000000000             DCL        VAR(&OUTQ)        TYPE(*CHAR) LEN(10)
+004100000000             DCL        VAR(&OVROUTQ)     TYPE(*CHAR) LEN(1)
+004200000000             DCL        VAR(&JLD)         TYPE(*CHAR) LEN(173)
+004300000000             DCL        VAR(&APPL)        TYPE(*CHAR) LEN(512)
+004400000000
+004500000000
+004600000000 /*  Set global error capture                                       */
+004700000000             MONMSG     MSGID(CPF0000 RPG0000 MCH0000) EXEC(GOTO +
+004800000000                          CMDLBL(ERR))
+004900000000
+005000000000
+005100000000 /*  Retrieve user defaults data area                               */
+005200000000
+005300000000             RTVJOBA    JOB(&JOB) USER(&USR) NBR(&NBR) OUTQ(&SVOUTQ) +
+005400000000                          OUTQLIB(&SVOUTQLIB)
+005500000000
+005600000000 /*  Load JLD                                                       */
+005700000000
+005800000000             CHGVAR     VAR(&JLD) VALUE(' ')
+005900000000
+006000000000
+006100000000/* Enter this CL program name and load into the JLD */
+006200150518>>>>         CHGVAR     VAR(%SST(&JLD 10 10))   VALUE('XXX0200C')
+006300000000
+006400000000
+006500000000 /*  Initialize all APPL decimal fields                             */
+006600000000             CHGVAR     VAR(%SST(&APPL   7   2)) VALUE('00')
+006700000000
+006800000000
+006900000000 /*  File overrides                                                 */
+007000000000
+007100000000/* Enter the unique keyed file name to be maintained. */
+007200150518             >>>>       OVRDBF     FILE(AAAXXXX) WAITRCD(15)
+007300000000
+007400000000
+007500000000
+007600000000
+007700000000 /*  Call work with application                                     */
+007800000000
+007900000000/* Enter the work with application name */
+008000150518>>>>         CALL       PGM(XXX0200R) PARM(&JLD &APPL)
+008100000000
+008200000000             GOTO       END
+008300000000
+008400000000
+008500000000
+008600000000 /*******************************************************************/
+008700000000 /*  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  */
+008800000000 /*******************************************************************/
+008900000000
+009000000000 ERR:        CHGVAR     VAR(&ERRMSG) VALUE('Program error has +
+009100000000                          occured!  Please call MIS immediately and +
+009200000000                          give them the following information:  +
+009300000000                          Job-          , User-          , Job +
+009400000000                          Number-      , and Program Name-          ')
+009500000000             MONMSG     MSGID(CPF0000 MCH0000)
+009600000000
+009700000000             CHGVAR     VAR(%SST(&ERRMSG 103 10)) VALUE(&JOB)
+009800000000             MONMSG     MSGID(CPF0000 MCH0000)
+009900000000             CHGVAR     VAR(%SST(&ERRMSG 120 10)) VALUE(&USR)
+010000000000             MONMSG     MSGID(CPF0000 MCH0000)
+010100000000             CHGVAR     VAR(%SST(&ERRMSG 143 6)) VALUE(&NBR)
+010200000000             MONMSG     MSGID(CPF0000 MCH0000)
+010300000000
+010400000000/* Enter this CL program name for use in message handling */
+010500150518>>>>         CHGVAR     VAR(%SST(&ERRMSG 168 10)) VALUE('XXX0200C')
+010600000000             MONMSG     MSGID(CPF0000 MCH0000)
+010700000000
+010800000000             SNDBRKMSG  MSG(&ERRMSG) TOMSGQ(&JOB)
+010900000000             MONMSG     MSGID(CPF0000 MCH0000)
+011000000000
+011100000000             RTVDTAARA  DTAARA(DADUMP (1 1)) RTNVAR(&DMPOPT)
+011200000000             IF         COND(&DMPOPT *NE 'N') THEN(DO)
+011300000000             DMPCLPGM
+011400000000             MONMSG     MSGID(CPF0000 MCH0000)
+011500000000             ENDDO
+011600000000
+011700000000
+011800000000 END:
+011900000000             DLTOVR     *ALL
+012000000000             MONMSG     MSGID(CPF0000 MCH0000)
+012100000000
+012200000000             RCLRSC
+012300000000
+012400000000             ENDPGM

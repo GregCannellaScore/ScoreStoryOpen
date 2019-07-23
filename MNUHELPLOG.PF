@@ -1,0 +1,41 @@
+000100140824      ********************************************************************
+000200140824      *
+000300140914      *  File: MNUHELPLOG
+000400140824      *
+000500140824      *  Description: Menu help text
+000600140824      *
+000700140824      *  Programmer: Greg Cannella
+000800140824      *
+000900140914      *  Date: 9/14/14
+001000140824      *
+001100140824      ********************************************************************
+001200140824      *                   Modification Log
+001300140824      *
+001400140824      *  Initials  Date      Description
+001500140824      *-------------------------------------------------------------------
+001600140824      *   xxx    xx/xx/xx  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+001700140824      *
+001800140824      *
+001900140824      *
+002000140824      ********************************************************************
+002100140824      *                   Indicator Usage (Display)
+002200140824      *
+002300140824      *   Ind.   Description
+002400140824      *-------------------------------------------------------------------
+002500140824      *   xx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+002600140824      *
+002700140824      *
+002800140824      ********************************************************************
+002900140914     A          R MNUHELPLGR
+003000140824     A            MZOPT         10          COLHDG('Option')
+003100140824     A            MZSEQ          3  0       COLHDG('Sequence')
+003200140824     A            MZTEXT      1199          COLHDG('Text')
+003300140824     A                                      VARLEN
+003400140824     A            MZLUDT         7S 0       COLHDG('Last Update Date')
+003500140824     A            MZLUTM         6S 0       COLHDG('Last Update Time')
+003600140824     A            MZLUUS        10          COLHDG('Last Update User')
+003700140824     A            MZLUPG        10          COLHDG('Last Update Program')
+003800140914     A            MZACTN        10          COLHDG('Action')
+003900140824      *
+004000140824     A          K MZOPT
+004100140824     A          K MZSEQ

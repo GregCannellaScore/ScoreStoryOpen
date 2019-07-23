@@ -1,0 +1,2 @@
+000100160109     HDebug Option(*Nodebugio:*Srcstmt)
+000200160109     HFIXNBR(*zoned) truncnbr(*yes)

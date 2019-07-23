@@ -1,0 +1,88 @@
+000100181023/********************************************************************/
+000200181023/*                                                                  */
+000300181023/* Program ID...... SETUPZS6                                        */
+000400181023/* Program Desc.... Restore PHP files to ZENDSVR6 folder            */
+000500181023/*                                                                  */
+000600181023/* Written By...... Greg Cannella                                   */
+000700181023/* Date Written.... 10/23/18                                        */
+000800181023/*                                                                  */
+000900181023/********************************************************************/
+001000181023/* Compile Options:                                                 */
+001100181023/*                                                                  */
+001200181023/*                                                                  */
+001300181023/*                                                                  */
+001400181023/********************************************************************/
+001500181023/* Modifications:                                                   */
+001600181023/* Req#  By    Date       Modification                              */
+001700181023/* 1234  XXX   XX/XX/XX                                             */
+001800181023/*                                                                  */
+001900181023/********************************************************************/
+002000181023
+002100181023             PGM
+002200181029
+002300181029             ADDLIBLE   LIB(JERRYMOUSE) POSITION(*LAST)
+002400181029             MONMSG     MSGID(CPF0000)
+002500181029
+002600181029             CRTDUPOBJ  OBJ(STRSS) FROMLIB(JERRYMOUSE) OBJTYPE(*CMD) +
+002700181029                          TOLIB(QGPL)
+002800181029             MONMSG     MSGID(CPF0000)
+002900181029             CRTDUPOBJ  OBJ(STRSS) FROMLIB(JERRYMOUSE) OBJTYPE(*PGM) +
+003000181029                          TOLIB(QGPL)
+003100181029             MONMSG     MSGID(CPF0000)
+003200181029             CRTDUPOBJ  OBJ(DSH0110C) FROMLIB(JERRYMOUSE) +
+003300181029                          OBJTYPE(*PGM) TOLIB(QGPL)
+003400181029             MONMSG     MSGID(CPF0000)
+003500181029
+003600181029             CHGOBJOWN  OBJ(DSH0117C) OBJTYPE(*PGM) NEWOWN(QTMHHTTP) +
+003700181029                          CUROWNAUT(*SAME)
+003800181029             MONMSG     MSGID(CPF0000)
+003900181029
+004000181029             CHGOBJOWN  OBJ(DSH0120C) OBJTYPE(*PGM) NEWOWN(QTMHHTTP) +
+004100181029                          CUROWNAUT(*SAME)
+004200181029             MONMSG     MSGID(CPF0000)
+004300181029
+004400181029             RUNSQL     SQL('create or replace function +
+004500181029                          jerrymouse.getdashboard (widbname +
+004600181029                          char(128), widbuser char(10), widbparm +
+004700181029                          char(200)) returns char(500) language +
+004800181029                          rpgle  not deterministic reads sql +
+004900181029                          data    external name     +
+005000181029                          ''JERRYMOUSE/DSH0110R(GETDASHBOARD)'' +
+005100181029                          parameter style general') COMMIT(*NONE)
+005200181029             MONMSG     MSGID(CPF0000)
+005300181029
+005400181029             RUNSQL     SQL('create or replace function +
+005500181029                          jerrymouse.createlink +
+005600181029                          (widbname char(128), wiimage char(100), +
+005700181029                          witext char(100), wiParm1 char(20) +
+005800181029                          DEFAULT '''', wiValue1 char(100) DEFAULT +
+005900181029                          '''', wiParm2 char(20) DEFAULT '''', +
+006000181029                          wiValue2 char(100) DEFAULT '''', wiParm3 +
+006100181029                          char(20) DEFAULT '''', wiValue3 char(100) +
+006200181029                          DEFAULT '''', wiParm4 char(20) DEFAULT +
+006300181029                          '''', wiValue4 char(100) DEFAULT '''', +
+006400181029                          wiParm5 char(20) DEFAULT '''', wiValue5 +
+006500181029                          char(100) DEFAULT '''') returns char(200) +
+006600181029                          language rpgle deterministic  no sql +
+006700181029                          external name +
+006800181029                          ''JERRYMOUSE/DSH0130R(CREATELINK)'' +
+006900181029                          parameter style general') +
+007000181029                          COMMIT(*NONE)
+007100181029             MONMSG     MSGID(CPF0000)
+007200181023
+007300181029             CRTDIR     DIR('www/zendsvr6') DTAAUT(*RWX) +
+007400181028                          OBJAUT(*ALL)
+007500181028             MONMSG     MSGID(CPF0000)
+007600181029             CRTDIR     DIR('www/zendsvr6/htdocs') DTAAUT(*RWX) +
+007700181029                          OBJAUT(*ALL)
+007800181029             MONMSG     MSGID(CPF0000)
+007900181028
+008000181023             RST        DEV('/QSYS.LIB/JERRYMOUSE.LIB/PHP.FILE') +
+008100181023                          OBJ(('/WWW/ZENDSVR6/HTDOCS/JERRYMOUSE'))
+008200181028             MONMSG     MSGID(CPF0000)
+008300181023
+008400181028             CHGAUT     OBJ('/www/zendsvr6/htdocs/jerrymouse') +
+008500181028                          USER(QTMHHTTP) DTAAUT(*RWX) OBJAUT(*ALL) +
+008600181028                          SUBTREE(*ALL)
+008700181028
+008800181023             ENDPGM

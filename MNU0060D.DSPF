@@ -1,0 +1,106 @@
+000100101230     A********************************************************************
+000200101230     A*
+000300101230     A*  File: MNU0060D
+000400101230     A*
+000500101230     A*  Description: Search menu system
+000600101230     A*
+000700101230     A*  Programmer: Greg Cannella
+000800101230     A*
+000900101230     A*  Date: 12/30/10
+001000101230     A*
+001100101230     A********************************************************************
+001200101230     A*                   Modification Log
+001300101230     A*
+001400101230     A*  Initials  Date      Description
+001500101230     A*-------------------------------------------------------------------
+001600101230     A*   xxx    xx/xx/xx  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+001700101230     A*
+001800101230     A*
+001900101230     A*
+002000101230     A********************************************************************
+002100101230     A*                   Indicator Usage (Display)
+002200101230     A*
+002300101230     A*   Ind.   Description
+002400101230     A*-------------------------------------------------------------------
+002500101230     A*   xx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+002600101230     A*
+002700101230     A*
+002800101230     A********************************************************************
+002900101230     A* File level keywords
+003000101230     A*
+003100101230     A                                      DSPSIZ(24 80 *DS3)
+003200101230     A                                      REF(*LIBL/REFFILE)
+003300101230     A                                      PRINT(*LIBL/QPRTKY)
+003400101230     A*
+003500101230     A* Subfile fields:
+003600101230     A*
+003700101230     A          R SCRNS01                   SFL
+003800101230     A            WSOPT         10A  O  8  2
+003900101230     A            WSMNAME       10A  O  8 13
+004000101230     A            WSSEL          4A  O  8 26
+004100101230     A            WSDESC        32A  O  8 34
+004200101230     A*
+004300101230     A* Subfile control:
+004400101230     A          R SCRNC01                   SFLCTL(SCRNS01)
+004500101230     A                                      SFLSIZ(0015)
+004600101230     A                                      SFLPAG(0014)
+004700101230     A                                      CF03(03)
+004800101230     A                                      CF05(05)
+004900101230     A                                      CF12(12)
+005000101230     A                                      ROLLDOWN(24)
+005100101230     A                                      ROLLUP(25)
+005200101230     A                                      RTNCSRLOC(&HDCSRR &HDCSRF &HDCSRP)
+005300101230     A                                      OVERLAY
+005400101230     A  32                                  SFLDSP
+005500101230     A N30                                  SFLDSPCTL
+005600101230     A  30                                  SFLCLR
+005700101230     A  34                                  SFLEND(*MORE)
+005800101230     A            THEFLD         1A  H
+005900101230     A            HDSFLP         4S 0H      SFLRCDNBR(CURSOR)
+006000101230     A            HDCSRR        10A  H
+006100101230     A            HDCSRF        10A  H
+006200101230     A            HDCSRP         4S 0H
+006300101230     A                                  1  2'MNU0060D'
+006400101230     A                                  1 72DATE
+006500101230     A                                      EDTCDE(Y)
+006600101230     A                                  2  2USER
+006700101230     A                                  1 32'Search Menu System'
+006800101230     A                                      COLOR(WHT)
+006900101230     A                                  2 72TIME
+007000101230     A                                  4  2'Search For......:'
+007100101230     A                                      COLOR(WHT)
+007200101230     A            WCSEARCH      32A  B  4 20CHANGE(60)
+007300110624     A***                                   CHECK(LC)
+007400101230     A                                      DSPATR(PC)
+007500101230     A                                  7  2'Option'
+007600101230     A                                      DSPATR(HI)
+007700101230     A                                  7 13'Menu'
+007800101230     A                                      DSPATR(HI)
+007900101230     A                                  7 24'Selection'
+008000101230     A                                      DSPATR(HI)
+008100101230     A                                  7 35'Description'
+008200101230     A                                      DSPATR(HI)
+008300101230     A* Command key descriptions:
+008400101230     A          R SCRNK01
+008500101230     A                                 23  3'F3=Exit'
+008600101230     A                                      COLOR(BLU)
+008700101230     A                                 23 13'F12=Cancel'
+008800101230     A                                      COLOR(BLU)
+008900101230      * Message subfile:
+009000101230      *
+009100101230     A          R MSGSFL1                   SFL
+009200101230     A                                      SFLMSGRCD(24)
+009300101230     A            MSGKEY                    SFLMSGKEY
+009400101230     A            DSPGMN                    SFLPGMQ
+009500101230      *
+009600101230      *
+009700101230      * Message subfile control:
+009800101230     A          R MSGCTL1                   SFLCTL(MSGSFL1)
+009900101230     A                                      OVERLAY
+010000101230     A N30                                  SFLEND
+010100101230     A N30                                  SFLDSP
+010200101230     A N30                                  SFLDSPCTL
+010300101230     A N30                                  SFLINZ
+010400101230     A                                      SFLSIZ(0005)
+010500101230     A                                      SFLPAG(0001)
+010600101230     A            DSPGMN                    SFLPGMQ

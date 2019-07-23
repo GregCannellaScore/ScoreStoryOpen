@@ -1,0 +1,37 @@
+000001101224      ********************************************************************
+000002101224      *
+000003101224      *  File: MNUHDRM
+000004101224      *
+000005101226      *  Description: Menu header file
+000006101224      *
+000007101224      *  Programmer: Greg Cannella
+000008101224      *
+000009101224      *  Date: 12/24/10
+000010101224      *
+000011101224      ********************************************************************
+000012101224      *                   Modification Log
+000013101224      *
+000014101224      *  Initials  Date      Description
+000015101224      *-------------------------------------------------------------------
+000016101224      *   xxx    xx/xx/xx  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+000017101224      *
+000018101224      *
+000019101224      *
+000020101224      ********************************************************************
+000021101224      *                   Indicator Usage (Display)
+000022101224      *
+000023101224      *   Ind.   Description
+000024101224      *-------------------------------------------------------------------
+000025101224      *   xx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+000026101224      *
+000027101224      *
+000028101224      ********************************************************************
+000200101224     A          R MNUHDRMR
+000300101226     A            MHMNAME       10          COLHDG('Menu Name')
+000400101226     A            MHMDESC       40          COLHDG('Description')
+000401101228     A            MHLUDT         7S 0       COLHDG('Last Update Date')
+000402101228     A            MHLUTM         6S 0       COLHDG('Last Update Time')
+000403101228     A            MHLUUS        10          COLHDG('Last Update User')
+000404101228     A            MHLUPG        10          COLHDG('Last Update Program')
+000500101226      *
+000600101226     A          K MHMNAME
