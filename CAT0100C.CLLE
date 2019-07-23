@@ -1,0 +1,144 @@
+000100960605/********************************************************************/
+000200960605/*                                                                  */
+000300080324/* Program ID...... CAT0100C                                        */
+000400080324/* Program Desc.... Work With Codes Category Maintenance            */
+000500960605/*                                                                  */
+000600080324/* Written By...... Greg Cannella                                   */
+000700080324/* Date Written....  3/24/08                                        */
+000800960626/* Request Number.. 1234                                            */
+000900960605/*                                                                  */
+001000960605/* Comments........                                                 */
+001100960605/*                                                                  */
+001200960605/*                                                                  */
+001300960605/********************************************************************/
+001400970108/* Compile Options:                                                 */
+001500970108/*                                                                  */
+001600970108/*                                                                  */
+001700970108/*                                                                  */
+001800970108/********************************************************************/
+001900960605/* Modifications:                                                   */
+002000081217/* Req#  By     Date       Modification                             */
+002100960605/*                                                                  */
+002200960605/********************************************************************/
+002300960605
+002400960605
+002500960626             PGM
+002600960605
+002700960605/*  Define and initialize calling paramaters                        */
+002800960605
+002900960626/* Error handling */
+003000960626             DCL        VAR(&JOB)         TYPE(*CHAR) LEN(10)
+003100960626             DCL        VAR(&USR)         TYPE(*CHAR) LEN(10)
+003200960626             DCL        VAR(&NBR)         TYPE(*CHAR) LEN(6)
+003300960626             DCL        VAR(&ERRMSG)      TYPE(*CHAR) LEN(200)
+003400960626             DCL        VAR(&DMPOPT)      TYPE(*CHAR) LEN(1)
+003500170813             DCL        VAR(&QRYSLT) TYPE(*CHAR) LEN(200)
+003600960626/* Job control */
+003700960626             DCL        VAR(&SVOUTQ)      TYPE(*CHAR) LEN(10)
+003800960626             DCL        VAR(&SVOUTQLIB)   TYPE(*CHAR) LEN(10)
+003900960626             DCL        VAR(&DTAARA)      TYPE(*CHAR) LEN(10)
+004000960626             DCL        VAR(&OUTQ)        TYPE(*CHAR) LEN(10)
+004100960626             DCL        VAR(&OVROUTQ)     TYPE(*CHAR) LEN(1)
+004200080324             DCL        VAR(&JLD)         TYPE(*CHAR) LEN(173)
+004300960626             DCL        VAR(&APPL)        TYPE(*CHAR) LEN(512)
+004400170813             DCL        VAR(&GROUP) TYPE(*CHAR) LEN(10)
+004500970117
+004600170813             CLOF       OPNID(JOINFILE)
+004700170813             MONMSG     MSGID(CPF0000)
+004800960605
+004900960605 /*  Set global error capture                                       */
+005000960605             MONMSG     MSGID(CPF0000 RPG0000 MCH0000) EXEC(GOTO +
+005100960605                          CMDLBL(ERR))
+005200960605
+005300960605
+005400960611 /*  Retrieve user defaults data area                               */
+005500960605
+005600960605             RTVJOBA    JOB(&JOB) USER(&USR) NBR(&NBR) OUTQ(&SVOUTQ) +
+005700960605                          OUTQLIB(&SVOUTQLIB)
+005800170813             RTVUSRPRF  GRPPRF(&GROUP)
+005900081216
+006000080324 /*  Load JLD                                                       */
+006100960605
+006200080324             CHGVAR     VAR(&JLD) VALUE(' ')
+006300960605
+006400970117
+006500080324/* Enter this CL program name and load into the JLD */
+006600080324             CHGVAR     VAR(%SST(&JLD 10 10))   VALUE('CAT0100C')
+006700970225
+006800970225
+006900970225 /*  Initialize all APPL decimal fields                             */
+007000970225             CHGVAR     VAR(%SST(&APPL   7   2)) VALUE('00')
+007100960605
+007200960611
+007300081216
+007400960611 /*  File overrides                                                 */
+007500970117
+007600970117/* Enter the unique keyed file name to be maintained. */
+007700080324             OVRDBF     FILE(CODECAT) WAITRCD(15)
+007800170813             OVRDBF     FILE(CODUSRM) WAITRCD(15)
+007900080303
+008000081216 /*  Select only categories user is allowed to maintain             */
+008100081216 /*  QPGMR group allwed to maintain all categories                  */
+008200081216
+008300170813             IF         COND(&GROUP *NE 'QPGMR') THEN(DO)
+008400081217             CHGVAR     VAR(&QRYSLT) VALUE('CUUSER *EQ "' *CAT &USR +
+008500081217                          *CAT '"')
+008600081217
+008700081217             OPNQRYF    FILE((CODEHDR1) (CODUSRM)) FORMAT(CODEHDR1) +
+008800081217                          QRYSLT(&QRYSLT) KEYFLD(*FILE) +
+008900081217                          JFLD((CHCODE CUCATC)) OPNID(JOINFILE) +
+009000170813                          OPNSCOPE(*JOB)
+009100170813             ENDDO
+009200960605
+009300960605
+009400960611
+009500960611 /*  Call work with application                                     */
+009600960611
+009700970117/* Enter the work with application name */
+009800080324             CALL       PGM(CAT0100R) PARM(&JLD &APPL)
+009900960605
+010000960605             GOTO       END
+010100960626
+010200960611
+010300960605
+010400960611 /*******************************************************************/
+010500960611 /*  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  */
+010600960611 /*******************************************************************/
+010700960605
+010800960605 ERR:        CHGVAR     VAR(&ERRMSG) VALUE('Program error has +
+010900960605                          occured!  Please call MIS immediately and +
+011000960605                          give them the following information:  +
+011100960605                          Job-          , User-          , Job +
+011200960605                          Number-      , and Program Name-          ')
+011300960605             MONMSG     MSGID(CPF0000 MCH0000)
+011400960605
+011500960605             CHGVAR     VAR(%SST(&ERRMSG 103 10)) VALUE(&JOB)
+011600960605             MONMSG     MSGID(CPF0000 MCH0000)
+011700960605             CHGVAR     VAR(%SST(&ERRMSG 120 10)) VALUE(&USR)
+011800960605             MONMSG     MSGID(CPF0000 MCH0000)
+011900960605             CHGVAR     VAR(%SST(&ERRMSG 143 6)) VALUE(&NBR)
+012000960605             MONMSG     MSGID(CPF0000 MCH0000)
+012100970117
+012200970117/* Enter this CL program name for use in message handling */
+012300080324             CHGVAR     VAR(%SST(&ERRMSG 168 10)) VALUE('CAT0100C')
+012400960605             MONMSG     MSGID(CPF0000 MCH0000)
+012500960605
+012600960605             SNDBRKMSG  MSG(&ERRMSG) TOMSGQ(&JOB)
+012700960605             MONMSG     MSGID(CPF0000 MCH0000)
+012800960605
+012900960605             RTVDTAARA  DTAARA(DADUMP (1 1)) RTNVAR(&DMPOPT)
+013000960605             IF         COND(&DMPOPT *NE 'N') THEN(DO)
+013100960605             DMPCLPGM
+013200960605             MONMSG     MSGID(CPF0000 MCH0000)
+013300960605             ENDDO
+013400960605
+013500960605
+013600960605 END:
+013700170813             CLOF       OPNID(JOINFILE)
+013800170813             MONMSG     MSGID(CPF0000)
+013900960605             DLTOVR     *ALL
+014000960605             MONMSG     MSGID(CPF0000 MCH0000)
+014100960605
+014200960605             RCLRSC
+014300960605
+014400960605             ENDPGM

@@ -1,0 +1,124 @@
+000100101228/********************************************************************/
+000200101228/*                                                                  */
+000300101228/* Program ID...... MNU0010C                                        */
+000400101228/* Program Desc.... Work With menu users                            */
+000500101228/*                                                                  */
+000600101228/* Written By...... Greg Cannella                                   */
+000700101228/* Date Written.... 12/28/10                                        */
+000800101228/* Request Number.. 1234                                            */
+000900101228/*                                                                  */
+001000101228/* Comments........                                                 */
+001100101228/*                                                                  */
+001200101228/*                                                                  */
+001300101228/********************************************************************/
+001400101228/* Compile Options:                                                 */
+001500101228/*                                                                  */
+001600101228/*                                                                  */
+001700101228/*                                                                  */
+001800101228/********************************************************************/
+001900101228/* Modifications:                                                   */
+002000101228/* Req#  By    Date       Modification                              */
+002100101228/* 1234  XXX   XX/XX/XX                                             */
+002200101228/*                                                                  */
+002300101228/********************************************************************/
+002400101228
+002500101228
+002600101228             PGM
+002700101228
+002800101228/*  Define and initialize calling paramaters                        */
+002900101228
+003000101228/* Error handling */
+003100101228             DCL        VAR(&JOB)         TYPE(*CHAR) LEN(10)
+003200101228             DCL        VAR(&USR)         TYPE(*CHAR) LEN(10)
+003300101228             DCL        VAR(&NBR)         TYPE(*CHAR) LEN(6)
+003400101228             DCL        VAR(&ERRMSG)      TYPE(*CHAR) LEN(200)
+003500101228             DCL        VAR(&DMPOPT)      TYPE(*CHAR) LEN(1)
+003600101228/* Job control */
+003700101228             DCL        VAR(&SVOUTQ)      TYPE(*CHAR) LEN(10)
+003800101228             DCL        VAR(&SVOUTQLIB)   TYPE(*CHAR) LEN(10)
+003900101228             DCL        VAR(&DTAARA)      TYPE(*CHAR) LEN(10)
+004000101228             DCL        VAR(&OUTQ)        TYPE(*CHAR) LEN(10)
+004100101228             DCL        VAR(&OVROUTQ)     TYPE(*CHAR) LEN(1)
+004200101228             DCL        VAR(&JLD)         TYPE(*CHAR) LEN(173)
+004300101228             DCL        VAR(&APPL)        TYPE(*CHAR) LEN(512)
+004400101228
+004500101228
+004600101228 /*  Set global error capture                                       */
+004700101228             MONMSG     MSGID(CPF0000 RPG0000 MCH0000) EXEC(GOTO +
+004800101228                          CMDLBL(ERR))
+004900101228
+005000101228
+005100101228 /*  Retrieve user defaults data area                               */
+005200101228
+005300101228             RTVJOBA    JOB(&JOB) USER(&USR) NBR(&NBR) OUTQ(&SVOUTQ) +
+005400101228                          OUTQLIB(&SVOUTQLIB)
+005500101228
+005600101228 /*  Load JLD                                                       */
+005700101228
+005800101228             CHGVAR     VAR(&JLD) VALUE(' ')
+005900101228
+006000101228
+006100101228/* Enter this CL program name and load into the JLD */
+006200101228             CHGVAR     VAR(%SST(&JLD 10 10))   VALUE('MNU0010C')
+006300101228
+006400101228
+006500101228 /*  Initialize all APPL decimal fields                             */
+006600101228             CHGVAR     VAR(%SST(&APPL   7   2)) VALUE('00')
+006700101228
+006800101228
+006900101228 /*  File overrides                                                 */
+007000101228
+007100101228/* Enter the unique keyed file name to be maintained. */
+007200101228                        OVRDBF     FILE(MNUUSRM) WAITRCD(15)
+007300101228
+007400101228
+007500101228
+007600101228
+007700101228 /*  Call work with application                                     */
+007800101228
+007900101228/* Enter the work with application name */
+008000101228             CALL       PGM(MNU0010R) PARM(&JLD &APPL)
+008100101228
+008200101228             GOTO       END
+008300101228
+008400101228
+008500101228
+008600101228 /*******************************************************************/
+008700101228 /*  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  */
+008800101228 /*******************************************************************/
+008900101228
+009000101228 ERR:        CHGVAR     VAR(&ERRMSG) VALUE('Program error has +
+009100101228                          occured!  Please call MIS immediately and +
+009200101228                          give them the following information:  +
+009300101228                          Job-          , User-          , Job +
+009400101228                          Number-      , and Program Name-          ')
+009500101228             MONMSG     MSGID(CPF0000 MCH0000)
+009600101228
+009700101228             CHGVAR     VAR(%SST(&ERRMSG 103 10)) VALUE(&JOB)
+009800101228             MONMSG     MSGID(CPF0000 MCH0000)
+009900101228             CHGVAR     VAR(%SST(&ERRMSG 120 10)) VALUE(&USR)
+010000101228             MONMSG     MSGID(CPF0000 MCH0000)
+010100101228             CHGVAR     VAR(%SST(&ERRMSG 143 6)) VALUE(&NBR)
+010200101228             MONMSG     MSGID(CPF0000 MCH0000)
+010300101228
+010400101228/* Enter this CL program name for use in message handling */
+010500101228             CHGVAR     VAR(%SST(&ERRMSG 168 10)) VALUE('MNU0010C')
+010600101228             MONMSG     MSGID(CPF0000 MCH0000)
+010700101228
+010800101228             SNDBRKMSG  MSG(&ERRMSG) TOMSGQ(&JOB)
+010900101228             MONMSG     MSGID(CPF0000 MCH0000)
+011000101228
+011100101228             RTVDTAARA  DTAARA(DADUMP (1 1)) RTNVAR(&DMPOPT)
+011200101228             IF         COND(&DMPOPT *NE 'N') THEN(DO)
+011300101228             DMPCLPGM
+011400101228             MONMSG     MSGID(CPF0000 MCH0000)
+011500101228             ENDDO
+011600101228
+011700101228
+011800101228 END:
+011900101228             DLTOVR     *ALL
+012000101228             MONMSG     MSGID(CPF0000 MCH0000)
+012100101228
+012200101228             RCLRSC
+012300101228
+012400101228             ENDPGM

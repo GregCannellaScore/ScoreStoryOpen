@@ -1,0 +1,115 @@
+000100000000/********************************************************************/
+000200000000/*                                                                  */
+000300000000/* Program ID...... CAT0020C                                        */
+000400000000/* Program Desc.... Mainain users who are allowed to change/add     */
+000500000000/*                  category                                        */
+000600000000/* Written By...... Greg Cannella                                   */
+000700000000/* Date Written.... 11/30/14                                        */
+000800000000/*                                                                  */
+000900000000/********************************************************************/
+001000000000/* Compile Options:                                                 */
+001100000000/*                                                                  */
+001200000000/*                                                                  */
+001300000000/*                                                                  */
+001400000000/********************************************************************/
+001500000000/* Modifications:                                                   */
+001600000000/* Req#  By    Date       Modification                              */
+001700000000/* 1234  XXX   XX/XX/XX                                             */
+001800000000/*                                                                  */
+001900000000/********************************************************************/
+002000000000
+002100000000             PGM
+002200000000
+002300000000/*  Define and initialize calling paramaters                        */
+002400000000
+002500000000/* Error handling */
+002600000000             DCL        VAR(&JOB)         TYPE(*CHAR) LEN(10)
+002700000000             DCL        VAR(&USR)         TYPE(*CHAR) LEN(10)
+002800000000             DCL        VAR(&NBR)         TYPE(*CHAR) LEN(6)
+002900000000             DCL        VAR(&ERRMSG)      TYPE(*CHAR) LEN(200)
+003000000000             DCL        VAR(&DMPOPT)      TYPE(*CHAR) LEN(1)
+003100000000/* Job control */
+003200000000             DCL        VAR(&SVOUTQ)      TYPE(*CHAR) LEN(10)
+003300000000             DCL        VAR(&SVOUTQLIB)   TYPE(*CHAR) LEN(10)
+003400000000             DCL        VAR(&DTAARA)      TYPE(*CHAR) LEN(10)
+003500000000             DCL        VAR(&OUTQ)        TYPE(*CHAR) LEN(10)
+003600000000             DCL        VAR(&OVROUTQ)     TYPE(*CHAR) LEN(1)
+003700000000             DCL        VAR(&JLD)         TYPE(*CHAR) LEN(173)
+003800000000             DCL        VAR(&APPL)        TYPE(*CHAR) LEN(512)
+003900000000
+004000000000
+004100000000 /*  Set global error capture                                       */
+004200000000             MONMSG     MSGID(CPF0000 RPG0000 MCH0000) EXEC(GOTO +
+004300000000                          CMDLBL(ERR))
+004400000000
+004500000000
+004600000000 /*  Retrieve user defaults data area                               */
+004700000000
+004800000000             RTVJOBA    JOB(&JOB) USER(&USR) NBR(&NBR) OUTQ(&SVOUTQ) +
+004900000000                          OUTQLIB(&SVOUTQLIB)
+005000000000
+005100000000 /*  Load JLD                                                       */
+005200000000
+005300000000             CHGVAR     VAR(&JLD) VALUE(' ')
+005400000000
+005500000000
+005600000000/* Enter this CL program name and load into the JLD */
+005700000000             CHGVAR     VAR(%SST(&JLD 10 10))   VALUE('CAT0020C')
+005800000000
+005900000000
+006000000000 /*  Initialize all APPL decimal fields                             */
+006100000000             CHGVAR     VAR(%SST(&APPL   7   2)) VALUE('00')
+006200000000
+006300000000
+006400000000 /*  File overrides                                                 */
+006500000000
+006600000000/* Enter the unique keyed file name to be maintained. */
+006700000000             OVRDBF     FILE(CODUSRM) WAITRCD(15)
+006800000000
+006900000000
+007000000000 /*  Call work with application                                     */
+007100000000
+007200000000/* Enter the work with application name */
+007300000000             CALL       PGM(CAT0020R) PARM(&JLD &APPL)
+007400000000
+007500000000             GOTO       END
+007600000000
+007700000000 /*******************************************************************/
+007800000000 /*  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  ERROR!!  */
+007900000000 /*******************************************************************/
+008000000000
+008100000000 ERR:        CHGVAR     VAR(&ERRMSG) VALUE('Program error has +
+008200000000                          occured!  Please call MIS immediately and +
+008300000000                          give them the following information:  +
+008400000000                          Job-          , User-          , Job +
+008500000000                          Number-      , and Program Name-          ')
+008600000000             MONMSG     MSGID(CPF0000 MCH0000)
+008700000000
+008800000000             CHGVAR     VAR(%SST(&ERRMSG 103 10)) VALUE(&JOB)
+008900000000             MONMSG     MSGID(CPF0000 MCH0000)
+009000000000             CHGVAR     VAR(%SST(&ERRMSG 120 10)) VALUE(&USR)
+009100000000             MONMSG     MSGID(CPF0000 MCH0000)
+009200000000             CHGVAR     VAR(%SST(&ERRMSG 143 6)) VALUE(&NBR)
+009300000000             MONMSG     MSGID(CPF0000 MCH0000)
+009400000000
+009500000000/* Enter this CL program name for use in message handling */
+009600000000             CHGVAR     VAR(%SST(&ERRMSG 168 10)) VALUE('CAT0020C')
+009700000000             MONMSG     MSGID(CPF0000 MCH0000)
+009800000000
+009900000000             SNDBRKMSG  MSG(&ERRMSG) TOMSGQ(&JOB)
+010000000000             MONMSG     MSGID(CPF0000 MCH0000)
+010100000000
+010200000000             RTVDTAARA  DTAARA(DADUMP (1 1)) RTNVAR(&DMPOPT)
+010300000000             IF         COND(&DMPOPT *NE 'N') THEN(DO)
+010400000000             DMPCLPGM
+010500000000             MONMSG     MSGID(CPF0000 MCH0000)
+010600000000             ENDDO
+010700000000
+010800000000
+010900000000 END:
+011000000000             DLTOVR     *ALL
+011100000000             MONMSG     MSGID(CPF0000 MCH0000)
+011200000000
+011300000000             RCLRSC
+011400000000
+011500000000             ENDPGM

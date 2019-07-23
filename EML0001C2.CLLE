@@ -1,0 +1,680 @@
+000100000000/*******************************************************************/
+000200000000/*                                                                 */
+000300150304/*  Program Name: EML0001C2                                        */
+000400000000/*                                                                 */
+000500150304/*  Description.: Send CSV files via email to multiple users       */
+000600000000/*                                                                 */
+000700170813/*  Programmer..:                                                  */
+000800000000/*                                                                 */
+000900170813/*  Date........:                                                  */
+001000000000/*                                                                 */
+001100081121/*******************************************************************/
+001200000000/*                     Modification Log                            */
+001300000000/*                                                                 */
+001400091204/* Req#  By      Date      Description                             */
+001500160309/*                                                                 */
+001600000000/*******************************************************************/
+001700150304             PGM        PARM(&FILENAME &EMAIL1 &EMAIL2 &EMAIL3 +
+001800150304                          &EMAIL4 &EMAIL5 &EMAIL6 &EMAIL7 &EMAIL8 +
+001900150304                          &EMAIL9 &EMAIL10 &EMAIL11 &EMAIL12 +
+002000150304                          &EMAIL13 &EMAIL14 &EMAIL15 &EMAIL16 +
+002100150304                          &EMAIL17 &EMAIL18 &EMAIL19 &EMAIL20 +
+002200150304                          &MSGBODY &SUBJECT)
+002300000000
+002400000000             DCL        VAR(&FileName) TYPE(*CHAR) LEN(10)
+002500000000             DCL        VAR(&User) TYPE(*CHAR) LEN(10)
+002600151102             DCL        VAR(&CurUser) TYPE(*CHAR) LEN(10)
+002700081230             DCL        VAR(&Job) TYPE(*CHAR) LEN(10)
+002800081230             DCL        VAR(&Nbr) TYPE(*CHAR) LEN(6)
+002900081229             DCL        VAR(&Next) TYPE(*DEC) LEN(5 0)
+003000081229             DCL        VAR(&NextChar) TYPE(*CHAR) LEN(5)
+003100150304             DCL        VAR(&EMAIL1) TYPE(*CHAR) LEN(52)
+003200150304             DCL        VAR(&Email2) TYPE(*CHAR) LEN(52)
+003300150304             DCL        VAR(&Email3) TYPE(*CHAR) LEN(52)
+003400150304             DCL        VAR(&Email4) TYPE(*CHAR) LEN(52)
+003500150304             DCL        VAR(&Email5) TYPE(*CHAR) LEN(52)
+003600150304             DCL        VAR(&Email6) TYPE(*CHAR) LEN(52)
+003700150304             DCL        VAR(&Email7) TYPE(*CHAR) LEN(52)
+003800150304             DCL        VAR(&Email8) TYPE(*CHAR) LEN(52)
+003900150304             DCL        VAR(&Email9) TYPE(*CHAR) LEN(52)
+004000150304             DCL        VAR(&EMAIL10) TYPE(*CHAR) LEN(52)
+004100150304             DCL        VAR(&Email11) TYPE(*CHAR) LEN(52)
+004200150304             DCL        VAR(&Email12) TYPE(*CHAR) LEN(52)
+004300150304             DCL        VAR(&Email13) TYPE(*CHAR) LEN(52)
+004400150304             DCL        VAR(&Email14) TYPE(*CHAR) LEN(52)
+004500150304             DCL        VAR(&Email15) TYPE(*CHAR) LEN(52)
+004600150304             DCL        VAR(&Email16) TYPE(*CHAR) LEN(52)
+004700150304             DCL        VAR(&Email17) TYPE(*CHAR) LEN(52)
+004800150304             DCL        VAR(&Email18) TYPE(*CHAR) LEN(52)
+004900150304             DCL        VAR(&Email19) TYPE(*CHAR) LEN(52)
+005000150304             DCL        VAR(&Email20) TYPE(*CHAR) LEN(52)
+005100000000             DCL        VAR(&EmAddr) TYPE(*CHAR) LEN(052)
+005200000000             DCL        VAR(&FLNAME) TYPE(*CHAR) LEN(035)
+005300130424             DCL        VAR(&RCDNBR) TYPE(*DEC) LEN(10)
+005400090121             DCL        VAR(&MsgBody) TYPE(*CHAR) LEN(256)
+005500130424             DCL        VAR(&MESSAGE) TYPE(*CHAR) LEN(5000)
+005600090217             DCL        VAR(&Time) TYPE(*CHAR) LEN(6)
+005700090217             DCL        VAR(&Date) TYPE(*CHAR) LEN(6)
+005800090217             DCL        VAR(&RunTime) TYPE(*CHAR) LEN(6)
+005900090217             DCL        VAR(&RunDate) TYPE(*CHAR) LEN(6)
+006000090217             DCL        VAR(&Count) TYPE(*DEC) LEN(2 0)
+006100090318             DCL        VAR(&MSGQ) TYPE(*CHAR) LEN(10)
+006200120504             DCL        VAR(&SUBJECT) TYPE(*CHAR) LEN(40)
+006300130424             DCL        VAR(&SUBJ_EMPTY) TYPE(*CHAR) LEN(60)
+006400091203             DCL        VAR(&CSVFILE) TYPE(*CHAR) LEN(12) +
+006500091203                          VALUE('Report.csv')
+006600081229             DCL        VAR(&ZIPFILE) TYPE(*CHAR) LEN(12)
+006700091203             DCL        VAR(&ZIPFLAG) TYPE(*CHAR) LEN(1)
+006800081230             DCL        VAR(&CSVObject) TYPE(*CHAR) LEN(50)
+006900081230             DCL        VAR(&ZipObject) TYPE(*CHAR) LEN(50)
+007000081230             DCL        VAR(&HomeDir) TYPE(*CHAR) LEN(50) +
+007100081229                          VALUE('/home/transfer')
+007200081229             DCL        VAR(&QdlsDir) TYPE(*CHAR) LEN(20) +
+007300081229                          VALUE('/qdls/transfer')
+007400160309             dcl        var(&EmailChk) type(*char) len(52) /*M01*/
+007500090121
+007600130424             RTVMBRD    FILE(&FILENAME) NBRCURRCD(&RCDNBR)
+007700130507
+007800130507/*---   Retrieve job atribute and sysytem value             -----*/
+007900151102             RTVJOBA    JOB(&JOB) USER(&USER) NBR(&NBR) +
+008000151102                          CURUSER(&CURUSER) SBMMSGQ(&MSGQ)
+008100130507
+008200150304             IF         COND(&Email1 = ' ') THEN(DO)
+008300130507/*---   Retrieve user to create email address               -----*/
+008400150304             CALL       PGM(USEEM) PARM(&USER &EMAIL1 &EMADDR &FLNAME)
+008500130507             ENDDO
+008600130507
+008700130424             IF         COND(&RCDNBR > 0) THEN(DO)
+008800130424
+008900090122             IF         COND(&MsgBody = ' ') THEN(DO)
+009000090122             CHGVAR     VAR(&MSGBODY) VALUE(&FILENAME *BCAT 'report +
+009100090122                          is attached.')
+009200090122             ENDDO
+009300090223
+009400090318/*---   Validate File Name                                  -----*/
+009500090403             CHKOBJ     OBJ(&FILENAME) OBJTYPE(*FILE)
+009600090318             MONMSG     MSGID(CPF9801) EXEC(DO)
+009700090403             SNDPGMMSG  MSGID(CPF9801) MSGF(QCPFMSG) +
+009800090403                          MSGDTA(&FILENAME) MSGTYPE(*ESCAPE)
+009900090318             GOTO       CMDLBL(END)
+010000090318             ENDDO
+010100090318
+010200090909/*---   Log every time the program is called.               -----*/
+010300150304             CALL       PGM(EML0003R) PARM(&FILENAME &EMAIL1 &MSGBODY)
+010400150304             IF         COND(&EMAIL2 *NE ' ') THEN(CALL +
+010500150304                          PGM(EML0003R) PARM(&FILENAME &EMAIL2 +
+010600150304                          &MSGBODY))
+010700150304             IF         COND(&EMAIL3 *NE ' ') THEN(CALL +
+010800150304                          PGM(EML0003R) PARM(&FILENAME &EMAIL3 +
+010900150304                          &MSGBODY))
+011000150304             IF         COND(&EMAIL4 *NE ' ') THEN(CALL +
+011100150304                          PGM(EML0003R) PARM(&FILENAME &EMAIL4 +
+011200150304                          &MSGBODY))
+011300150304             IF         COND(&EMAIL5 *NE ' ') THEN(CALL +
+011400150304                          PGM(EML0003R) PARM(&FILENAME &EMAIL5 +
+011500150304                          &MSGBODY))
+011600150306             IF         COND(&EMAIL6 *NE ' ') THEN(CALL +
+011700150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL6 +
+011800150306                          &MSGBODY))
+011900150306             IF         COND(&EMAIL7 *NE ' ') THEN(CALL +
+012000150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL7 +
+012100150306                          &MSGBODY))
+012200150306             IF         COND(&EMAIL8 *NE ' ') THEN(CALL +
+012300150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL8 +
+012400150306                          &MSGBODY))
+012500150306             IF         COND(&EMAIL9 *NE ' ') THEN(CALL +
+012600150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL9 +
+012700150306                          &MSGBODY))
+012800150306             IF         COND(&EMAIL10 *NE ' ') THEN(CALL +
+012900150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL10 +
+013000150306                          &MSGBODY))
+013100150306             IF         COND(&EMAIL11 *NE ' ') THEN(CALL +
+013200150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL11 +
+013300150306                          &MSGBODY))
+013400150306             IF         COND(&EMAIL12 *NE ' ') THEN(CALL +
+013500150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL12 +
+013600150306                          &MSGBODY))
+013700150306             IF         COND(&EMAIL13 *NE ' ') THEN(CALL +
+013800150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL13 +
+013900150306                          &MSGBODY))
+014000150306             IF         COND(&EMAIL14 *NE ' ') THEN(CALL +
+014100150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL14 +
+014200150306                          &MSGBODY))
+014300150306             IF         COND(&EMAIL15 *NE ' ') THEN(CALL +
+014400150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL15 +
+014500150306                          &MSGBODY))
+014600150306             IF         COND(&EMAIL16 *NE ' ') THEN(CALL +
+014700150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL16 +
+014800150306                          &MSGBODY))
+014900150306             IF         COND(&EMAIL17 *NE ' ') THEN(CALL +
+015000150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL17 +
+015100150306                          &MSGBODY))
+015200150306             IF         COND(&EMAIL18 *NE ' ') THEN(CALL +
+015300150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL18 +
+015400150306                          &MSGBODY))
+015500150306             IF         COND(&EMAIL19 *NE ' ') THEN(CALL +
+015600150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL19 +
+015700150306                          &MSGBODY))
+015800150306             IF         COND(&EMAIL20 *NE ' ') THEN(CALL +
+015900150306                          PGM(EML0003R) PARM(&FILENAME &EMAIL20 +
+016000150306                          &MSGBODY))
+016100090909
+016200090217/*---   Check if another report is running at the same time -----*/
+016300090217 LOOP:       RTVDTAARA  DTAARA(RUNEMAIL (1 6)) RTNVAR(&RUNDATE)
+016400090217             RTVDTAARA  DTAARA(RUNEMAIL (7 6)) RTNVAR(&RUNTIME)
+016500090223             RTVSYSVAL  SYSVAL(QTIME) RTNVAR(&TIME)
+016600090223             RTVSYSVAL  SYSVAL(QDate) RTNVAR(&Date)
+016700090217
+016800090217/*--- Delay job if another job is processing                 ----*/
+016900091204             IF         COND(&RUNDATE = &DATE *AND &TIME >= +
+017000091204                          &RUNTIME) THEN(DO)
+017100091204             DLYJOB     DLY(10)
+017200091204             CHGVAR     VAR(&COUNT) VALUE(&COUNT + 1)
+017300091204             IF         COND(&COUNT <= 30) THEN(GOTO CMDLBL(LOOP))
+017400091204             ENDDO
+017500091204
+017600091204             CHGDTAARA  DTAARA(RUNEMAIL (1 6)) VALUE(&DATE)
+017700091204             CHGDTAARA  DTAARA(RUNEMAIL (7 6)) VALUE(&TIME)
+017800090217
+017900081230/*---   Create work flat file in QTEMP                      -----*/
+018000121218             DLTF       FILE(QTEMP/EMLCSVW)
+018100121218             MONMSG     MSGID(CPF0000)
+018200121218
+018300000000             CRTDUPOBJ  OBJ(EMLCSVW) FROMLIB(*LIBL) OBJTYPE(*FILE) +
+018400000000                          TOLIB(QTEMP)
+018500000000             MONMSG     MSGID(CPF0000)
+018600000000
+018700000000             CLRPFM     FILE(QTEMP/EMLCSVW)
+018800000000             MONMSG     MSGID(CPF0000)
+018900000000
+019000081230/*---   Retrieve work file fields description               -----*/
+019100000000             DSPFFD     FILE(&FileName) OUTPUT(*OUTFILE) +
+019200000000                          OUTFILE(QTEMP/HDRCSVW)
+019300000000
+019400000000             OVRDBF     FILE(EMLCSVW) TOFILE(QTEMP/EMLCSVW)
+019500000000             OVRDBF     FILE(HDRCSVW) TOFILE(QTEMP/HDRCSVW)
+019600000000
+019700081230/*---   Build Header for CSV file                           -----*/
+019800000000             CALL       PGM(EML0001R)
+019900000000
+020000081230/*---   Copy Data to a flat file                            -----*/
+020100090217             CPYTOIMPF  FROMFILE(&FILENAME) TOFILE(EMLCSVW) +
+020200090217                          MBROPT(*ADD) RCDDLM(*EOR) DTAFMT(*DLM) +
+020300090217                          RMVBLANK(*TRAILING) FLDDLM('|')
+020400081201
+020500090217             CALL       PGM(EML0002R)
+020600091203
+020700091203/*---   Retrieve file size in bites                         -----*/
+020800150304             DSPFD      FILE(&FILENAME) TYPE(*MBR) OUTPUT(*OUTFILE) +
+020900150304                          OUTFILE(QTEMP/FILESIZE)
+021000091203
+021100150304             CALL       PGM(EML0004R) PARM(&ZIPFLAG)
+021200090217
+021300091204/*---   Copy csv file into /qdls/transfer directory         -----*/
+021400120206             CPYTOPCD   FROMFILE(QTEMP/EMLCSVW) TOFLR(TRANSFER) +
+021500120206                          TODOC(&CSVFILE) REPLACE(*YES)
+021600091204
+021700091203/*---   If file size is less than 3MB, do not zip the file  -----*/
+021800150304             IF         COND(&ZIPFLAG = 'N') THEN(DO)
+021900120504
+022000150304             IF         COND(&SUBJECT = ' ') THEN(DO)
+022100150304             CHGVAR     VAR(&SUBJECT) VALUE('Report')
+022200150304             ENDDO
+022300120504
+022400120504/*---   if there is a subject, change document description  -----*/
+022500150304             CHGDOCD    DOC(&CSVFILE) FLR(TRANSFER) DOCD(&SUBJECT)
+022600150304
+022700160309/*---   Send email based on distribution file if distribution code exists---*/
+022800160309             CALLSUBR   SUBR(DistCheck) /*M01*/
+022900160309
+023000150305/*---   Send email with csv file attached to user 1         -----*/
+023100160309             IF         COND(&EMAIL1 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+023200160309                          TOINTNET((&EMAIL1)) DSTD(&SUBJECT) +
+023300160309                          MSG(&MSGBODY) DOC(&CSVFILE) FLR(TRANSFER))
+023400160309/*M01      **SNDDST ****TYPE(*DOC) TOINTNET((&EMAIL1)) DSTD(&SUBJECT) +
+023500160309                    ****  MSG(&MSGBODY) DOC(&CSVFILE) FLR(TRANSFER)*/
+023600150305/*---   Send email with csv file attached to user 2         -----*/
+023700150305             IF         COND(&EMAIL2 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+023800150305                          TOINTNET((&EMAIL2)) DSTD(&SUBJECT) +
+023900150305                          MSG(&MSGBODY) DOC(&CSVFILE) FLR(TRANSFER))
+024000150305/*---   Send email with csv file attached to user 3         -----*/
+024100150305             IF         COND(&EMAIL3 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+024200150305                          TOINTNET((&EMAIL3)) DSTD(&SUBJECT) +
+024300150305                          MSG(&MSGBODY) DOC(&CSVFILE) FLR(TRANSFER))
+024400150305/*---   Send email with csv file attached to user 4         -----*/
+024500150305             IF         COND(&EMAIL4 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+024600150305                          TOINTNET((&EMAIL4)) DSTD(&SUBJECT) +
+024700150305                          MSG(&MSGBODY) DOC(&CSVFILE) FLR(TRANSFER))
+024800150305/*---   Send email with csv file attached to user 5         -----*/
+024900150305             IF         COND(&EMAIL5 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+025000150305                          TOINTNET((&EMAIL5)) DSTD(&SUBJECT) +
+025100150305                          MSG(&MSGBODY) DOC(&CSVFILE) FLR(TRANSFER))
+025200150305/*---   Send email with csv file attached to user 6         -----*/
+025300150305             IF         COND(&EMAIL6 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+025400150305                          TOINTNET((&EMAIL6)) DSTD(&SUBJECT) +
+025500150305                          MSG(&MSGBODY) DOC(&CSVFILE) FLR(TRANSFER))
+025600150305/*---   Send email with csv file attached to user 7         -----*/
+025700150305             IF         COND(&EMAIL7 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+025800150305                          TOINTNET((&EMAIL7)) DSTD(&SUBJECT) +
+025900150305                          MSG(&MSGBODY) DOC(&CSVFILE) FLR(TRANSFER))
+026000150305/*---   Send email with csv file attached to user 8         -----*/
+026100150305             IF         COND(&EMAIL8 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+026200150305                          TOINTNET((&EMAIL8)) DSTD(&SUBJECT) +
+026300150305                          MSG(&MSGBODY) DOC(&CSVFILE) FLR(TRANSFER))
+026400150305/*---   Send email with csv file attached to user 9         -----*/
+026500150305             IF         COND(&EMAIL9 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+026600150305                          TOINTNET((&EMAIL9)) DSTD(&SUBJECT) +
+026700150305                          MSG(&MSGBODY) DOC(&CSVFILE) FLR(TRANSFER))
+026800150305/*---   Send email with csv file attached to user 10        -----*/
+026900150305             IF         COND(&EMAIL10 *NE ' ') THEN(SNDDST +
+027000150305                          TYPE(*DOC) TOINTNET((&EMAIL10)) +
+027100150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+027200150305                          DOC(&CSVFILE) FLR(TRANSFER))
+027300150305/*---   Send email with csv file attached to user 11        -----*/
+027400150305             IF         COND(&EMAIL11 *NE ' ') THEN(SNDDST +
+027500150305                          TYPE(*DOC) TOINTNET((&EMAIL11)) +
+027600150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+027700150305                          DOC(&CSVFILE) FLR(TRANSFER))
+027800150305/*---   Send email with csv file attached to user 12        -----*/
+027900150305             IF         COND(&EMAIL12 *NE ' ') THEN(SNDDST +
+028000150305                          TYPE(*DOC) TOINTNET((&EMAIL12)) +
+028100150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+028200150306                          DOC(&CSVFILE) FLR(TRANSFER))
+028300150305/*---   Send email with csv file attached to user 13        -----*/
+028400150305             IF         COND(&EMAIL13 *NE ' ') THEN(SNDDST +
+028500150305                          TYPE(*DOC) TOINTNET((&EMAIL13)) +
+028600150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+028700150306                          DOC(&CSVFILE) FLR(TRANSFER))
+028800150305/*---   Send email with csv file attached to user 14        -----*/
+028900150305             IF         COND(&EMAIL14 *NE ' ') THEN(SNDDST +
+029000150305                          TYPE(*DOC) TOINTNET((&EMAIL14)) +
+029100150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+029200150306                          DOC(&CSVFILE) FLR(TRANSFER))
+029300150305/*---   Send email with csv file attached to user 15        -----*/
+029400150305             IF         COND(&EMAIL15 *NE ' ') THEN(SNDDST +
+029500150305                          TYPE(*DOC) TOINTNET((&EMAIL15)) +
+029600150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+029700150306                          DOC(&CSVFILE) FLR(TRANSFER))
+029800150305/*---   Send email with csv file attached to user 16        -----*/
+029900150305             IF         COND(&EMAIL16 *NE ' ') THEN(SNDDST +
+030000150305                          TYPE(*DOC) TOINTNET((&EMAIL16)) +
+030100150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+030200150306                          DOC(&CSVFILE) FLR(TRANSFER))
+030300150305/*---   Send email with csv file attached to user 17        -----*/
+030400150305             IF         COND(&EMAIL17 *NE ' ') THEN(SNDDST +
+030500150305                          TYPE(*DOC) TOINTNET((&EMAIL17)) +
+030600150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+030700150306                          DOC(&CSVFILE) FLR(TRANSFER))
+030800150305/*---   Send email with csv file attached to user 18        -----*/
+030900150305             IF         COND(&EMAIL18 *NE ' ') THEN(SNDDST +
+031000150305                          TYPE(*DOC) TOINTNET((&EMAIL18)) +
+031100150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+031200150306                          DOC(&CSVFILE) FLR(TRANSFER))
+031300150305/*---   Send email with csv file attached to user 19        -----*/
+031400150305             IF         COND(&EMAIL19 *NE ' ') THEN(SNDDST +
+031500150305                          TYPE(*DOC) TOINTNET((&EMAIL19)) +
+031600150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+031700150306                          DOC(&CSVFILE) FLR(TRANSFER))
+031800150305/*---   Send email with csv file attached to user 20        -----*/
+031900150305             IF         COND(&EMAIL20 *NE ' ') THEN(SNDDST +
+032000150305                          TYPE(*DOC) TOINTNET((&EMAIL20)) +
+032100150305                          DSTD(&SUBJECT) MSG(&MSGBODY) +
+032200150306                          DOC(&CSVFILE) FLR(TRANSFER))
+032300150304
+032400150304             CHGVAR     VAR(&CSVOBJECT) VALUE(&QDLSDIR *TCAT '/' +
+032500150304                          *TCAT &CSVFILE)
+032600150304             RMVLNK     OBJLNK(&CSVOBJECT)
+032700150304             ENDDO
+032800091203
+032900091203/*---   If file size is greater than 3MB, zip the file      -----*/
+033000150304             ELSE       CMD(DO) /* Zip the file           */
+033100091204
+033200091204/*---   Get the report number from data area                -----*/
+033300091204             RTVDTAARA  DTAARA(EMAILRPT) RTNVAR(&NEXT)
+033400091204             CHGVAR     VAR(&NextChar) VALUE(&Next)
+033500091204
+033600091204/*---   Update data area with the next available report #   -----*/
+033700091204             CHGVAR     VAR(&NEXT) VALUE(&NEXT + 1)
+033800091204             CHGDTAARA  DTAARA(EMAILRPT) VALUE(&NEXT)
+033900091204
+034000091204/*---   Make zip file name                                 -----*/
+034100091204             CHGVAR     VAR(&ZIPFILE) VALUE('RPT' *TCAT &NextChar +
+034200091204                          *TCAT '.zip')
+034300091204
+034400081230/*---   Make directory under home/transfer which is unique   ----*/
+034500081230/*---   for each user by &job and &nbr                       ----*/
+034600081230             CHGVAR     VAR(&HomeDir) VALUE(&HomeDir *TCAT '/' *TCAT +
+034700081230                          &Job *Tcat &Nbr)
+034800081230             MD         DIR(&HomeDir)
+034900081230
+035000081230/*---   Zip CSV File                                        -----*/
+035100081230             CHGVAR     VAR(&CsvObject) VALUE(&QdlsDir *TCAT '/' +
+035200081229                          *TCAT &CSVFile)
+035300081230             CHGVAR     VAR(&ZipObject) VALUE(&HomeDir *TCAT '/' +
+035400081229                          *TCAT &ZIPFile)
+035500081229             MOVE       OBJ(&CsvObject) TODIR(&HomeDir)
+035600081230             CHGVAR     VAR(&CsvObject) VALUE(&HomeDir *TCAT '/' +
+035700081229                          *TCAT &CSVFile)
+035800090818             CHGVAR     VAR(&COUNT) VALUE(0)
+035900090220 ZIP:        ZIP_CMD    ACTIONS('--create') JARFILE(&ZIPOBJECT) +
+036000090220                          FILE(&CSVOBJECT)
+036100081229             MOVE       OBJ(&ZipObject) TODIR(&QdlsDir)
+036200090220             MONMSG     MSGID(CPF0000) EXEC(DO)
+036300090220             DLYJOB     DLY(10)
+036400090220             CHGVAR     VAR(&COUNT) VALUE(&COUNT + 1)
+036500090220             IF         COND(&COUNT <= 6) THEN(GOTO CMDLBL(ZIP))
+036600160309             ENDDO
+036700160309
+036800160309/*---   Send email based on distribution file if distribution code exists---*/
+036900160309             CALLSUBR   SUBR(DistCheck) /*M01*/
+037000081230
+037100150305/*---   Send email with zip file attached to user 1          -----*/
+037200160309             IF         COND(&EMAIL1 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+037300160309                          TOINTNET((&EMAIL1)) DSTD('Report') +
+037400160309                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+037500160309                          DOC(&ZIPFILE) FLR(TRANSFER))
+037600160309/*M01      **SNDDST ****TYPE(*DOC) TOINTNET((&EMAIL1)) +
+037700160309                    ****  DSTD('Report') MSG(&MSGBODY) +
+037800160309                    ****  SNDFMT(*NOCHG) DOC(&ZIPFILE) FLR(TRANSFER)*/
+037900150305/*---   Send email with zip file attached to user 2          -----*/
+038000150305             IF         COND(&EMAIL2 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+038100150305                          TOINTNET((&EMAIL2)) DSTD('Report') +
+038200150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+038300150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+038400150305/*---   Send email with zip file attached to user 3          -----*/
+038500150305             IF         COND(&EMAIL3 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+038600150305                          TOINTNET((&EMAIL3)) DSTD('Report') +
+038700150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+038800150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+038900150305/*---   Send email with zip file attached to user 4          -----*/
+039000150305             IF         COND(&EMAIL4 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+039100150305                          TOINTNET((&EMAIL4)) DSTD('Report') +
+039200150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+039300150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+039400150305/*---   Send email with zip file attached to user 5          -----*/
+039500150305             IF         COND(&EMAIL5 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+039600150305                          TOINTNET((&EMAIL5)) DSTD('Report') +
+039700150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+039800150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+039900150305/*---   Send email with zip file attached to user 6          -----*/
+040000150305             IF         COND(&EMAIL6 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+040100150305                          TOINTNET((&EMAIL6)) DSTD('Report') +
+040200150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+040300150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+040400150305/*---   Send email with zip file attached to user 7          -----*/
+040500150305             IF         COND(&EMAIL7 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+040600150305                          TOINTNET((&EMAIL7)) DSTD('Report') +
+040700150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+040800150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+040900150305/*---   Send email with zip file attached to user 8          -----*/
+041000150305             IF         COND(&EMAIL8 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+041100150305                          TOINTNET((&EMAIL8)) DSTD('Report') +
+041200150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+041300150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+041400150305/*---   Send email with zip file attached to user 9          -----*/
+041500150305             IF         COND(&EMAIL9 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+041600150305                          TOINTNET((&EMAIL9)) DSTD('Report') +
+041700150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+041800150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+041900150305/*---   Send email with zip file attached to user 10         -----*/
+042000150305             IF         COND(&EMAIL10 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+042100150305                          TOINTNET((&EMAIL10)) DSTD('Report') +
+042200150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+042300150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+042400150305/*---   Send email with zip file attached to user 11         -----*/
+042500150305             IF         COND(&EMAIL11 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+042600150305                          TOINTNET((&EMAIL11)) DSTD('Report') +
+042700150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+042800150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+042900150305/*---   Send email with zip file attached to user 12         -----*/
+043000150305             IF         COND(&EMAIL12 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+043100150305                          TOINTNET((&EMAIL12)) DSTD('Report') +
+043200150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+043300150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+043400150305/*---   Send email with zip file attached to user 13         -----*/
+043500150305             IF         COND(&EMAIL13 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+043600150305                          TOINTNET((&EMAIL13)) DSTD('Report') +
+043700150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+043800150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+043900150305/*---   Send email with zip file attached to user 14         -----*/
+044000150305             IF         COND(&EMAIL14 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+044100150305                          TOINTNET((&EMAIL14)) DSTD('Report') +
+044200150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+044300150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+044400150305/*---   Send email with zip file attached to user 15         -----*/
+044500150305             IF         COND(&EMAIL15 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+044600150305                          TOINTNET((&EMAIL15)) DSTD('Report') +
+044700150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+044800150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+044900150305/*---   Send email with zip file attached to user 16         -----*/
+045000150305             IF         COND(&EMAIL16 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+045100150305                          TOINTNET((&EMAIL16)) DSTD('Report') +
+045200150305                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+045300150305                          DOC(&ZIPFILE) FLR(TRANSFER))
+045400150306/*---   Send email with zip file attached to user 17         -----*/
+045500150306             IF         COND(&EMAIL17 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+045600150306                          TOINTNET((&EMAIL17)) DSTD('Report') +
+045700150306                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+045800150306                          DOC(&ZIPFILE) FLR(TRANSFER))
+045900150306/*---   Send email with zip file attached to user 18         -----*/
+046000150306             IF         COND(&EMAIL18 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+046100150306                          TOINTNET((&EMAIL18)) DSTD('Report') +
+046200150306                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+046300150306                          DOC(&ZIPFILE) FLR(TRANSFER))
+046400150306/*---   Send email with zip file attached to user 19         -----*/
+046500150306             IF         COND(&EMAIL19 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+046600150306                          TOINTNET((&EMAIL19)) DSTD('Report') +
+046700150306                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+046800150306                          DOC(&ZIPFILE) FLR(TRANSFER))
+046900150306/*---   Send email with zip file attached to user 20         -----*/
+047000150306             IF         COND(&EMAIL20 *NE ' ') THEN(SNDDST TYPE(*DOC) +
+047100150306                          TOINTNET((&EMAIL20)) DSTD('Report') +
+047200150306                          MSG(&MSGBODY) SNDFMT(*NOCHG) +
+047300150306                          DOC(&ZIPFILE) FLR(TRANSFER))
+047400090116/*---   Clean Up                                             -----*/
+047500081230             CHGVAR     VAR(&ZipObject) VALUE(&QdlsDir *TCAT '/' +
+047600081230                          *TCAT &ZipFile)
+047700081229             RMVLNK     OBJLNK(&CsvObject)
+047800151102             CHGAUT     OBJ(&ZIPOBJECT) USER(&CURUSER) DTAAUT(*RWX)
+047900090109
+048000081229             RMVLNK     OBJLNK(&ZipObject)
+048100081230             RMVDIR     DIR(&HomeDir)
+048200091203
+048300091203             ENDDO
+048400000000
+048500091203             DLTOVR     FILE(*ALL)
+048600091203
+048700000000             DLTF       FILE(QTEMP/HDRCSVW)
+048800000000             DLTF       FILE(QTEMP/EMLCSVW)
+048900091203             DLTF       FILE(QTEMP/FILESIZE)
+049000090217
+049100130424             ENDDO
+049200130424
+049300130424             ELSE       CMD(DO)
+049400130424
+049500130507             IF         COND(&SUBJECT = ' ') THEN(CHGVAR +
+049600130507                          VAR(&SUBJ_EMPTY) VALUE('The File' *BCAT +
+049700130507                          &FILENAME *BCAT 'Has No Records'))
+049800130424             ELSE       CMD(CHGVAR VAR(&SUBJ_EMPTY) VALUE(&SUBJECT +
+049900130424                          *BCAT 'EMPTY'))
+050000130424
+050100130502             CHGVAR     VAR(&MESSAGE) VALUE(&MSGBODY *BCAT 'THE +
+050200130502                          REPORT YOU REQUESTED RETURNED AN EMPTY +
+050300130502                          DATA SET')
+050400160309/*M01     ***CALL   ****PGM(SNDDSTR1) PARM(&EMAIL1 &SUBJ_EMPTY +
+050500160309                    ****  &MESSAGE) */
+050600150304
+050700160309             IF         COND(&EMAIL1 *NE ' ') THEN(CALL       +
+050800160309                          PGM(SNDDSTR1) PARM(&EMAIL1 &SUBJ_EMPTY +
+050900160309                          &MESSAGE)) /*M01*/
+051000150304             IF         COND(&EMAIL2 *NE ' ') THEN(CALL +
+051100150304                          PGM(SNDDSTR1) PARM(&EMAIL2 &SUBJ_EMPTY +
+051200150304                          &MESSAGE))
+051300150304             IF         COND(&EMAIL3 *NE ' ') THEN(CALL +
+051400150304                          PGM(SNDDSTR1) PARM(&EMAIL3 &SUBJ_EMPTY +
+051500150304                          &MESSAGE))
+051600150304             IF         COND(&EMAIL4 *NE ' ') THEN(CALL +
+051700150304                          PGM(SNDDSTR1) PARM(&EMAIL4 &SUBJ_EMPTY +
+051800150304                          &MESSAGE))
+051900150304             IF         COND(&EMAIL5 *NE ' ') THEN(CALL +
+052000150304                          PGM(SNDDSTR1) PARM(&EMAIL5 &SUBJ_EMPTY +
+052100150304                          &MESSAGE))
+052200150306             IF         COND(&EMAIL6 *NE ' ') THEN(CALL +
+052300150306                          PGM(SNDDSTR1) PARM(&EMAIL6 &SUBJ_EMPTY +
+052400150306                          &MESSAGE))
+052500150306             IF         COND(&EMAIL7 *NE ' ') THEN(CALL +
+052600150306                          PGM(SNDDSTR1) PARM(&EMAIL7 &SUBJ_EMPTY +
+052700150306                          &MESSAGE))
+052800150306             IF         COND(&EMAIL8 *NE ' ') THEN(CALL +
+052900150306                          PGM(SNDDSTR1) PARM(&EMAIL8 &SUBJ_EMPTY +
+053000150306                          &MESSAGE))
+053100150306             IF         COND(&EMAIL9 *NE ' ') THEN(CALL +
+053200150306                          PGM(SNDDSTR1) PARM(&EMAIL9 &SUBJ_EMPTY +
+053300150306                          &MESSAGE))
+053400150306             IF         COND(&EMAIL10 *NE ' ') THEN(CALL +
+053500150306                          PGM(SNDDSTR1) PARM(&EMAIL10 &SUBJ_EMPTY +
+053600150306                          &MESSAGE))
+053700150306             IF         COND(&EMAIL11 *NE ' ') THEN(CALL +
+053800150306                          PGM(SNDDSTR1) PARM(&EMAIL11 &SUBJ_EMPTY +
+053900150306                          &MESSAGE))
+054000150306             IF         COND(&EMAIL12 *NE ' ') THEN(CALL +
+054100150306                          PGM(SNDDSTR1) PARM(&EMAIL12 &SUBJ_EMPTY +
+054200150306                          &MESSAGE))
+054300150306             IF         COND(&EMAIL13 *NE ' ') THEN(CALL +
+054400150306                          PGM(SNDDSTR1) PARM(&EMAIL13 &SUBJ_EMPTY +
+054500150306                          &MESSAGE))
+054600150306             IF         COND(&EMAIL14 *NE ' ') THEN(CALL +
+054700150306                          PGM(SNDDSTR1) PARM(&EMAIL14 &SUBJ_EMPTY +
+054800150306                          &MESSAGE))
+054900150306             IF         COND(&EMAIL15 *NE ' ') THEN(CALL +
+055000150306                          PGM(SNDDSTR1) PARM(&EMAIL15 &SUBJ_EMPTY +
+055100150306                          &MESSAGE))
+055200150306             IF         COND(&EMAIL16 *NE ' ') THEN(CALL +
+055300150306                          PGM(SNDDSTR1) PARM(&EMAIL16 &SUBJ_EMPTY +
+055400150306                          &MESSAGE))
+055500150306             IF         COND(&EMAIL17 *NE ' ') THEN(CALL +
+055600150306                          PGM(SNDDSTR1) PARM(&EMAIL17 &SUBJ_EMPTY +
+055700150306                          &MESSAGE))
+055800150306             IF         COND(&EMAIL18 *NE ' ') THEN(CALL +
+055900150306                          PGM(SNDDSTR1) PARM(&EMAIL18 &SUBJ_EMPTY +
+056000150306                          &MESSAGE))
+056100150306             IF         COND(&EMAIL19 *NE ' ') THEN(CALL +
+056200150306                          PGM(SNDDSTR1) PARM(&EMAIL19 &SUBJ_EMPTY +
+056300150306                          &MESSAGE))
+056400150306             IF         COND(&EMAIL20 *NE ' ') THEN(CALL +
+056500150306                          PGM(SNDDSTR1) PARM(&EMAIL20 &SUBJ_EMPTY +
+056600150306                          &MESSAGE))
+056700150304             ENDDO
+056800150304
+056900090217             CHGDTAARA  DTAARA(RUNEMAIL) VALUE(' ')
+057000000000
+057100160309
+057200160309/*******************************************************************/
+057300160309/* Search for a email distribution code. All distribution codes    */
+057400160309/* must have a asterisk in position 1. When a distribution codes is*/
+057500160309/* found then the emails are sent and then the code is removed     */
+057600160309/* from the field preventing the program from emailing to the code.*/
+057700160309/*                                                                 */
+057800160309/*******************************************************************/
+057900160309subr DistCheck
+058000160309
+058100160309   chgvar     var(&EmailChk) value(&Email1)
+058200160309   callsubr   subr(DistEmail)
+058300160309   chgvar     var(&Email1  ) value(&EmailChk)
+058400160309
+058500160309   chgvar     var(&EmailChk) value(&Email2)
+058600160309   callsubr   subr(DistEmail)
+058700160309   chgvar     var(&Email2  ) value(&EmailChk)
+058800160309
+058900160309   chgvar     var(&EmailChk) value(&Email3)
+059000160309   callsubr   subr(DistEmail)
+059100160309   chgvar     var(&Email3  ) value(&EmailChk)
+059200160309
+059300160309   chgvar     var(&EmailChk) value(&Email4)
+059400160309   callsubr   subr(DistEmail)
+059500160309   chgvar     var(&Email4  ) value(&EmailChk)
+059600160309
+059700160309   chgvar     var(&EmailChk) value(&Email5)
+059800160309   callsubr   subr(DistEmail)
+059900160309   chgvar     var(&Email5  ) value(&EmailChk)
+060000160309
+060100160309   chgvar     var(&EmailChk) value(&Email6)
+060200160309   callsubr   subr(DistEmail)
+060300160309   chgvar     var(&Email6  ) value(&EmailChk)
+060400160309
+060500160309   chgvar     var(&EmailChk) value(&Email7)
+060600160309   callsubr   subr(DistEmail)
+060700160309   chgvar     var(&Email7  ) value(&EmailChk)
+060800160309
+060900160309   chgvar     var(&EmailChk) value(&Email8)
+061000160309   callsubr   subr(DistEmail)
+061100160309   chgvar     var(&Email8  ) value(&EmailChk)
+061200160309
+061300160309   chgvar     var(&EmailChk) value(&Email9)
+061400160309   callsubr   subr(DistEmail)
+061500160309   chgvar     var(&Email9  ) value(&EmailChk)
+061600160309
+061700160309   chgvar     var(&EmailChk) value(&Email10)
+061800160309   callsubr   subr(DistEmail)
+061900160309   chgvar     var(&Email10 ) value(&EmailChk)
+062000160309
+062100160309   chgvar     var(&EmailChk) value(&Email11)
+062200160309   callsubr   subr(DistEmail)
+062300160309   chgvar     var(&Email11 ) value(&EmailChk)
+062400160309
+062500160309   chgvar     var(&EmailChk) value(&Email12)
+062600160309   callsubr   subr(DistEmail)
+062700160309   chgvar     var(&Email12 ) value(&EmailChk)
+062800160309
+062900160309   chgvar     var(&EmailChk) value(&Email13)
+063000160309   callsubr   subr(DistEmail)
+063100160309   chgvar     var(&Email13 ) value(&EmailChk)
+063200160309
+063300160309   chgvar     var(&EmailChk) value(&Email14)
+063400160309   callsubr   subr(DistEmail)
+063500160309   chgvar     var(&Email14 ) value(&EmailChk)
+063600160309
+063700160309   chgvar     var(&EmailChk) value(&Email15)
+063800160309   callsubr   subr(DistEmail)
+063900160309   chgvar     var(&Email15 ) value(&EmailChk)
+064000160309
+064100160309   chgvar     var(&EmailChk) value(&Email16)
+064200160309   callsubr   subr(DistEmail)
+064300160309   chgvar     var(&Email16 ) value(&EmailChk)
+064400160309
+064500160309   chgvar     var(&EmailChk) value(&Email17)
+064600160309   callsubr   subr(DistEmail)
+064700160309   chgvar     var(&Email17 ) value(&EmailChk)
+064800160309
+064900160309   chgvar     var(&EmailChk) value(&Email18)
+065000160309   callsubr   subr(DistEmail)
+065100160309   chgvar     var(&Email18 ) value(&EmailChk)
+065200160309
+065300160309   chgvar     var(&EmailChk) value(&Email19)
+065400160309   callsubr   subr(DistEmail)
+065500160309   chgvar     var(&Email19 ) value(&EmailChk)
+065600160309
+065700160309   chgvar     var(&EmailChk) value(&Email20)
+065800160309   callsubr   subr(DistEmail)
+065900160309   chgvar     var(&Email20 ) value(&EmailChk)
+066000160309
+066100160309
+066200160309endsubr
+066300160309/*******************************************************************/
+066400160309subr DistEmail
+066500160309
+066600160309   /* If asterisk then call distribution program */
+066700160309   if         cond(%sst(&EmailChk 1 1) *eq '*') then(do)
+066800160309     call       pgm(EML0005R) parm(&FileName &EmailChk &MsgBody +
+066900160309                  &Message &Subject &Subj_Empty &CsvFile +
+067000160309                  &ZipFile &ZipFlag)
+067100160309     /* Clear distribution value so program will not try to email it */
+067200160309     chgvar     var(&EmailChk) value(' ')
+067300160309
+067400160309   enddo
+067500160309
+067600160309endsubr
+067700160309
+067800160309/*******************************************************************/
+067900120109 END:
+068000120109             ENDPGM

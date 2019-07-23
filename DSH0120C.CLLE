@@ -1,0 +1,57 @@
+000100151108/*******************************************************************/
+000200151108/*                                                                 */
+000300151108/*  Program Name: DSH0120C                                         */
+000400151108/*                                                                 */
+000500151108/*  Description: Move chart to the IFS                             */
+000600151108/*                                                                 */
+000700151108/*  Programmer: Greg Cannella                                      */
+000800151108/*                                                                 */
+000900151108/*  Date: 11/24/15                                                 */
+001000151108/*                                                                 */
+001100151108/*******************************************************************/
+001200151108/*                     Modification Log                            */
+001300151108/*                                                                 */
+001400151108/* Initials  Date     Description                                  */
+001500151108/*-----------------------------------------------------------------*/
+001600151108/*  XXX    XX/XX/XX  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+001700151108/*                                                                 */
+001800151108/*                                                                 */
+001900151108/*                                                                 */
+002000151108/*                                                                 */
+002100151108/*                                                                 */
+002200151108/*******************************************************************/
+002300170524             PGM        PARM(&CHARTNAME &USERID &INPARMS)
+002400151108
+002500151108             DCL        VAR(&CHARTNAME) TYPE(*CHAR) LEN(20)
+002600171028             DCL        VAR(&LONGNAME) TYPE(*CHAR) LEN(80)
+002700170524             DCL        VAR(&USERID) TYPE(*CHAR) LEN(10)
+002800170524             DCL        VAR(&INPARMS) TYPE(*CHAR) LEN(200)
+002900171028
+003000171028             CLRPFM     FILE(JERRYMOUSE/DSH0120W)
+003100151108
+003200170524             CALL       DSH0120R PARM(&CHARTNAME &USERID &INPARMS)
+003300171028
+003400180408             DLTF       FILE(QTEMP/DSH0120W1)
+003500180408             MONMSG     MSGID(CPF0000)
+003600171028             CRTPF      FILE(QTEMP/DSH0120W1) RCDLEN(32000)
+003700171028             CPYF       FROMFILE(JERRYMOUSE/DSH0120W) +
+003800171028                          TOFILE(QTEMP/DSH0120W1) MBROPT(*REPLACE) +
+003900171028                          FMTOPT(*NOCHK)
+004000180404             MONMSG     MSGID(CPF0000)
+004100171028
+004200171028        /*   CRTPF      FILE(QTEMP/DSH0120W) RCDLEN(32000)   */
+004300171028        /*   CPYF       FROMFILE(JERRYMOUSE/DSH0120W) +
+004400171028                          TOFILE(QTEMP/DSH0120W) MBROPT(*REPLACE) +
+004500171028                          FMTOPT(*NOCHK)         */
+004600151108
+004700181028             CHGVAR     VAR(&LONGNAME) +
+004800181028                          VALUE('/WWW/ZENDSVR6/HTDOCS/jerrymouse/JMCH+
+004900181028                          RT/' *TCAT &CHARTNAME *TCAT '.HTML')
+005000151108
+005100171028             CPYTOSTMF  +
+005200171028                          FROMMBR('/qsys.lib/qtemp.lib/DSH0120W1.file+
+005300171028                          /dsh0120w1.mbr') TOSTMF(&LONGNAME) +
+005400171028                          STMFOPT(*REPLACE) STMFCCSID(*STDASCII) +
+005500171028                          AUT(*INDIR)
+005600151108
+005700151108             ENDPGM

@@ -1,0 +1,364 @@
+000100960606     A*****************************************************************
+000200960606     A*                                                               *
+000300080324     A* Program ID...... CAT0111D                                     *
+000400080324     A* Program Desc.... Maintain Codes Categories                    *
+000500960606     A*                                                               *
+000600080324     A* Written By...... Greg Cannella                                *
+000700080324     A* Date Written....  3/24/08                                     *
+000800960626     A* Request Number.. 1234                                         *
+000900960606     A*                                                               *
+001000960606     A* Comments........                                              *
+001100960606     A*                                                               *
+001200960606     A*                                                               *
+001300960606     A*****************************************************************
+001400960606     A* Compile Options:                                              *
+001500970108     A*                                                               *
+001600960606     A*                                                               *
+001700960606     A*                                                               *
+001800960606     A*****************************************************************
+001900960606     A* Modifications:                                                *
+002000970108     A*                                                               *
+002100970108     A* Req#  By   Date      Modification                             *
+002200970108     A* 1234  XXX  XX/XX/XX                                           *
+002300970108     A*                                                               *
+002400960606     A*****************************************************************
+002500960606     A*
+002600960606     A*
+002700960606     A************************
+002800960606     A* File level keywords **
+002900960606     A************************
+003000960606     A*
+003100100519     A*%%EC
+003200100519     A                                      DSPSIZ(24 80 *DS3)
+003300100519     A                                      REF(*LIBL/REFFILE)
+003400100519     A                                      PRINT
+003500960606     A*
+003600960606     A*
+003700960606     A**********************
+003800960606     A* Display record #1 **
+003900960606     A**********************
+004000100519     A          R SCRNR01
+004100100519     A N36                                  CF04(04)
+004200100519     A                                      CF12(12)
+004300100519     A                                      CHANGE(38)
+004400100519     A                                      RTNCSRLOC(&HDCSRR &HDCSRF &HDCSRP)
+004500100519     A                                      OVERLAY
+004600100519     A            HDCSRR        10A  H
+004700100519     A            HDCSRF        10A  H
+004800100519     A            HDCSRP         4S 0H
+004900100519     A                                  1  2'CAT0111-1'
+005000100519     A            WRDSC1        33A  O  1 24DSPATR(HI)
+005100100519     A                                  1 72DATE
+005200100519     A                                      EDTCDE(Y)
+005300100519     A                                  2  2USER
+005400100519     A                                  2 72TIME
+005500100519     A            WRCODE        10A  O  2 13COLOR(WHT)
+005600100519     A            WRCODD        40A  O  2 24COLOR(WHT)
+005700100519     A  51 29     WRCATK1L       1A  B  5 36
+005800100519     A                                      CHECK(LC)
+005900100519     A  40                                  DSPATR(PC)
+006000100519     A  40                                  DSPATR(RI)
+006100100519     A  36
+006200100519     AO 37                                  DSPATR(PR)
+006300100519     A N36N37                               DSPATR(UL)
+006400100519     A  51N29     WRCATK1        1A  B  5 36
+006500100519     A  40                                  DSPATR(PC)
+006600100519     A  40                                  DSPATR(RI)
+006700100519     A  36
+006800100519     AO 37                                  DSPATR(PR)
+006900100519     A N36N37                               DSPATR(UL)
+007000100519     A  52 29     WRCATK2L       2A  B  5 36
+007100100519     A                                      CHECK(LC)
+007200100519     A  40                                  DSPATR(PC)
+007300100519     A  40                                  DSPATR(RI)
+007400100519     A  36
+007500100519     AO 37                                  DSPATR(PR)
+007600100519     A N36N37                               DSPATR(UL)
+007700100519     A  52N29     WRCATK2        2A  B  5 36
+007800100519     A  40                                  DSPATR(PC)
+007900100519     A  40                                  DSPATR(RI)
+008000100519     A  36
+008100100519     AO 37                                  DSPATR(PR)
+008200100519     A N36N37                               DSPATR(UL)
+008300100519     A  53 29     WRCATK3L       3A  B  5 36
+008400100519     A                                      CHECK(LC)
+008500100519     A  40                                  DSPATR(PC)
+008600100519     A  40                                  DSPATR(RI)
+008700100519     A  36
+008800100519     AO 37                                  DSPATR(PR)
+008900100519     A N36N37                               DSPATR(UL)
+009000100519     A  53N29     WRCATK3        3A  B  5 36
+009100100519     A  40                                  DSPATR(PC)
+009200100519     A  40                                  DSPATR(RI)
+009300100519     A  36
+009400100519     AO 37                                  DSPATR(PR)
+009500100519     A N36N37                               DSPATR(UL)
+009600100519     A  54 29     WRCATK4L       4A  B  5 36
+009700100519     A                                      CHECK(LC)
+009800100519     A  40                                  DSPATR(PC)
+009900100519     A  40                                  DSPATR(RI)
+010000100519     A  36
+010100100519     AO 37                                  DSPATR(PR)
+010200100519     A N36N37                               DSPATR(UL)
+010300100519     A  54N29     WRCATK4        4A  B  5 36
+010400100519     A  40                                  DSPATR(PC)
+010500100519     A  40                                  DSPATR(RI)
+010600100519     A  36
+010700100519     AO 37                                  DSPATR(PR)
+010800100519     A N36N37                               DSPATR(UL)
+010900100519     A  55 29     WRCATK5L       5A  B  5 36
+011000100519     A                                      CHECK(LC)
+011100100519     A  40                                  DSPATR(PC)
+011200100519     A  40                                  DSPATR(RI)
+011300100519     A  36
+011400100519     AO 37                                  DSPATR(PR)
+011500100519     A N36N37                               DSPATR(UL)
+011600100519     A  55N29     WRCATK5        5A  B  5 36
+011700100519     A  40                                  DSPATR(PC)
+011800100519     A  40                                  DSPATR(RI)
+011900100519     A  36
+012000100519     AO 37                                  DSPATR(PR)
+012100100519     A N36N37                               DSPATR(UL)
+012200100519     A  56 29     WRCATK6L       6A  B  5 36
+012300100519     A                                      CHECK(LC)
+012400100519     A  40                                  DSPATR(PC)
+012500100519     A  40                                  DSPATR(RI)
+012600100519     A  36
+012700100519     AO 37                                  DSPATR(PR)
+012800100519     A N36N37                               DSPATR(UL)
+012900100519     A  56N29     WRCATK6        6A  B  5 36
+013000100519     A  40                                  DSPATR(PC)
+013100100519     A  40                                  DSPATR(RI)
+013200100519     A  36
+013300100519     AO 37                                  DSPATR(PR)
+013400100519     A N36N37                               DSPATR(UL)
+013500100519     A  57 29     WRCATK7L       7A  B  5 36
+013600100519     A                                      CHECK(LC)
+013700100519     A  40                                  DSPATR(PC)
+013800100519     A  40                                  DSPATR(RI)
+013900100519     A  36
+014000100519     AO 37                                  DSPATR(PR)
+014100100519     A N36N37                               DSPATR(UL)
+014200100519     A  57N29     WRCATK7        7A  B  5 36
+014300100519     A  40                                  DSPATR(PC)
+014400100519     A  40                                  DSPATR(RI)
+014500100519     A  36
+014600100519     AO 37                                  DSPATR(PR)
+014700100519     A N36N37                               DSPATR(UL)
+014800100519     A  58 29     WRCATK8L       8A  B  5 36
+014900100519     A                                      CHECK(LC)
+015000100519     A  40                                  DSPATR(PC)
+015100100519     A  40                                  DSPATR(RI)
+015200100519     A  36
+015300100519     AO 37                                  DSPATR(PR)
+015400100519     A N36N37                               DSPATR(UL)
+015500100519     A  58N29     WRCATK8        8A  B  5 36
+015600100519     A  40                                  DSPATR(PC)
+015700100519     A  40                                  DSPATR(RI)
+015800100519     A  36
+015900100519     AO 37                                  DSPATR(PR)
+016000100519     A N36N37                               DSPATR(UL)
+016100100519     A  59 29     WRCATK9L       9A  B  5 36
+016200100519     A                                      CHECK(LC)
+016300100519     A  40                                  DSPATR(PC)
+016400100519     A  40                                  DSPATR(RI)
+016500100519     A  36
+016600100519     AO 37                                  DSPATR(PR)
+016700100519     A N36N37                               DSPATR(UL)
+016800100519     A  59N29     WRCATK9        9A  B  5 36
+016900100519     A  40                                  DSPATR(PC)
+017000100519     A  40                                  DSPATR(RI)
+017100100519     A  36
+017200100519     AO 37                                  DSPATR(PR)
+017300100519     A N36N37                               DSPATR(UL)
+017400100519     A  60 29     WRCATK10L     10A  B  5 36
+017500100519     A                                      CHECK(LC)
+017600100519     A  40                                  DSPATR(PC)
+017700100519     A  40                                  DSPATR(RI)
+017800100519     A  36
+017900100519     AO 37                                  DSPATR(PR)
+018000100519     A N36N37                               DSPATR(UL)
+018100100519     A  60N29     WRCATK10      10A  B  5 36
+018200100519     A  40                                  DSPATR(PC)
+018300100519     A  40                                  DSPATR(RI)
+018400100519     A  36
+018500100519     AO 37                                  DSPATR(PR)
+018600100519     A N36N37                               DSPATR(UL)
+018700100519     A  61 29     WRCATK11L     11A  B  5 36
+018800100519     A                                      CHECK(LC)
+018900100519     A  40                                  DSPATR(PC)
+019000100519     A  40                                  DSPATR(RI)
+019100100519     A  36
+019200100519     AO 37                                  DSPATR(PR)
+019300100519     A N36N37                               DSPATR(UL)
+019400100519     A  61N29     WRCATK11      11A  B  5 36
+019500100519     A  40                                  DSPATR(PC)
+019600100519     A  40                                  DSPATR(RI)
+019700100519     A  36
+019800100519     AO 37                                  DSPATR(PR)
+019900100519     A N36N37                               DSPATR(UL)
+020000100519     A  62 29     WRCATK12L     12A  B  5 36
+020100100519     A                                      CHECK(LC)
+020200100519     A  40                                  DSPATR(PC)
+020300100519     A  40                                  DSPATR(RI)
+020400100519     A  36
+020500100519     AO 37                                  DSPATR(PR)
+020600100519     A N36N37                               DSPATR(UL)
+020700100519     A  62N29     WRCATK12      12A  B  5 36
+020800100519     A  40                                  DSPATR(PC)
+020900100519     A  40                                  DSPATR(RI)
+021000100519     A  36
+021100100519     AO 37                                  DSPATR(PR)
+021200100519     A N36N37                               DSPATR(UL)
+021300100519     A  63 29     WRCATK13L     13A  B  5 36
+021400100519     A                                      CHECK(LC)
+021500100519     A  40                                  DSPATR(PC)
+021600100519     A  40                                  DSPATR(RI)
+021700100519     A  36
+021800100519     AO 37                                  DSPATR(PR)
+021900100519     A N36N37                               DSPATR(UL)
+022000100519     A  63N29     WRCATK13      13A  B  5 36
+022100100519     A  40                                  DSPATR(PC)
+022200100519     A  40                                  DSPATR(RI)
+022300100519     A  36
+022400100519     AO 37                                  DSPATR(PR)
+022500100519     A N36N37                               DSPATR(UL)
+022600100519     A  64 29     WRCATK14L     14A  B  5 36
+022700100519     A                                      CHECK(LC)
+022800100519     A  40                                  DSPATR(PC)
+022900100519     A  40                                  DSPATR(RI)
+023000100519     A  36
+023100100519     AO 37                                  DSPATR(PR)
+023200100519     A N36N37                               DSPATR(UL)
+023300100519     A  64N29     WRCATK14      14A  B  5 36
+023400100519     A  40                                  DSPATR(PC)
+023500100519     A  40                                  DSPATR(RI)
+023600100519     A  36
+023700100519     AO 37                                  DSPATR(PR)
+023800100519     A N36N37                               DSPATR(UL)
+023900100519     A  65 29     WRCATK15L     15A  B  5 36
+024000100519     A                                      CHECK(LC)
+024100100519     A  40                                  DSPATR(PC)
+024200100519     A  40                                  DSPATR(RI)
+024300100519     A  36
+024400100519     AO 37                                  DSPATR(PR)
+024500100519     A N36N37                               DSPATR(UL)
+024600100519     A  65N29     WRCATK15      15A  B  5 36
+024700100519     A  40                                  DSPATR(PC)
+024800100519     A  40                                  DSPATR(RI)
+024900100519     A  36
+025000100519     AO 37                                  DSPATR(PR)
+025100100519     A N36N37                               DSPATR(UL)
+025200100519     A  66 29     WRCATK16L     16A  B  5 36
+025300100519     A                                      CHECK(LC)
+025400100519     A  40                                  DSPATR(PC)
+025500100519     A  40                                  DSPATR(RI)
+025600100519     A  36
+025700100519     AO 37                                  DSPATR(PR)
+025800100519     A N36N37                               DSPATR(UL)
+025900100519     A  66N29     WRCATK16      16A  B  5 36
+026000100519     A  40                                  DSPATR(PC)
+026100100519     A  40                                  DSPATR(RI)
+026200100519     A  36
+026300100519     AO 37                                  DSPATR(PR)
+026400100519     A N36N37                               DSPATR(UL)
+026500100519     A  67 29     WRCATK17L     17A  B  5 36
+026600100519     A                                      CHECK(LC)
+026700100519     A  40                                  DSPATR(PC)
+026800100519     A  40                                  DSPATR(RI)
+026900100519     A  36
+027000100519     AO 37                                  DSPATR(PR)
+027100100519     A N36N37                               DSPATR(UL)
+027200100519     A  67N29     WRCATK17      17A  B  5 36
+027300100519     A  40                                  DSPATR(PC)
+027400100519     A  40                                  DSPATR(RI)
+027500100519     A  36
+027600100519     AO 37                                  DSPATR(PR)
+027700100519     A N36N37                               DSPATR(UL)
+027800100519     A  68 29     WRCATK18L     18A  B  5 36
+027900100519     A                                      CHECK(LC)
+028000100519     A  40                                  DSPATR(PC)
+028100100519     A  40                                  DSPATR(RI)
+028200100519     A  36
+028300100519     AO 37                                  DSPATR(PR)
+028400100519     A N36N37                               DSPATR(UL)
+028500100519     A  68N29     WRCATK18      18A  B  5 36
+028600100519     A  40                                  DSPATR(PC)
+028700100519     A  40                                  DSPATR(RI)
+028800100519     A  36
+028900100519     AO 37                                  DSPATR(PR)
+029000100519     A N36N37                               DSPATR(UL)
+029100100519     A  69 29     WRCATK19L     19A  B  5 36
+029200100519     A                                      CHECK(LC)
+029300100519     A  40                                  DSPATR(PC)
+029400100519     A  40                                  DSPATR(RI)
+029500100519     A  36
+029600100519     AO 37                                  DSPATR(PR)
+029700100519     A N36N37                               DSPATR(UL)
+029800100519     A  69N29     WRCATK19      19A  B  5 36
+029900100519     A  40                                  DSPATR(PC)
+030000100519     A  40                                  DSPATR(RI)
+030100100519     A  36
+030200100519     AO 37                                  DSPATR(PR)
+030300100519     A N36N37                               DSPATR(UL)
+030400100519     A  70 29     WRCATKL       20A  B  5 36
+030500100519     A                                      CHECK(LC)
+030600100519     A  40                                  DSPATR(PC)
+030700100519     A  40                                  DSPATR(RI)
+030800100519     A  36
+030900100519     AO 37                                  DSPATR(PR)
+031000100519     A N36N37                               DSPATR(UL)
+031100100519     A  70N29     WRCATK        20A  B  5 36
+031200100519     A  40                                  DSPATR(PC)
+031300100519     A  40                                  DSPATR(RI)
+031400100519     A  36
+031500100519     AO 37                                  DSPATR(PR)
+031600100519     A N36N37                               DSPATR(UL)
+031700100519     A            WRCATD        40A  B  7 36
+031800100519     A  41                                  DSPATR(PC)
+031900100519     A  41                                  DSPATR(RI)
+032000100519     A  36                                  DSPATR(PR)
+032100100519     A N36                                  DSPATR(UL)
+032200100519     A                                      CHECK(LC)
+032300100519     A                                 20  3'Last Maintenance..'
+032400100519     A                                      DSPATR(HI)
+032500100519     A            WRLDTE         6Y 0O 20 22EDTCDE(Y)
+032600100519     A            WRLTIM         6Y 0O 20 31EDTWRD('  :  :  ')
+032700100519     A            WRLUSR        10A  O 20 40
+032800100519     A            WRLPGM        10A  O 20 51
+032900100519     A            WRKEYLAB      30   O  5  5
+033000100519     A            WRDATALAB     30   O  7  5
+033100960606     A*
+033200960606     A*
+033300960606     A*****************************
+033400960606     A* Command key descriptions **
+033500960606     A*****************************
+033600970109     A          R SCRNK01
+033700960607     A                                      OVERLAY
+033800960627     A                                 22 20'F12=Previous'
+033900960607     A                                      COLOR(BLU)
+034000960627     A N36                             22  2'F4=Prompt(*)'
+034100960627     A                                      COLOR(BLU)
+034200960606     A*
+034300960606     A*
+034400960606     A***********************
+034500960606     A* Message subfile #1 **
+034600960606     A***********************
+034700010102     A          R MSGSFL1                   SFL
+034800010102     A                                      SFLMSGRCD(24)
+034900010102     A            MSGKEY                    SFLMSGKEY
+035000010102     A            DSPGMN                    SFLPGMQ(10)
+035100960606     A*
+035200960606     A*
+035300960606     A*******************************
+035400960606     A* Message subfile control #1 **
+035500960606     A*******************************
+035600010102     A          R MSGCTL1                   SFLCTL(MSGSFL1)
+035700010102     A                                      OVERLAY
+035800010102     A N30                                  SFLDSP
+035900010102     A N30                                  SFLDSPCTL
+036000010102     A N30                                  SFLINZ
+036100010102     A N30                                  SFLEND
+036200010102     A                                      SFLSIZ(0005)
+036300010102     A                                      SFLPAG(0001)
+036400010102     A            DSPGMN                    SFLPGMQ(10)

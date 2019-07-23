@@ -1,0 +1,36 @@
+000001090909      ********************************************************************
+000002090909      *
+000003090909      *  File: EMLLOGM
+000004090909      *
+000005090909      *  Description: Email Usage Log
+000006090909      *
+000007090909      *  Programmer: Greg Cannella
+000008090909      *
+000009090909      *  Date: 9/9/09
+000010090909      *
+000011090909      ********************************************************************
+000012090909      *                   Modification Log
+000013090909      *
+000014090909      *  Initials  Date      Description
+000015090909      *-------------------------------------------------------------------
+000016090909      *   xxx    xx/xx/xx  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+000017090909      *
+000018090909      *
+000019090909      *
+000020090909      ********************************************************************
+000021090909      *                   Indicator Usage (Display)
+000022090909      *
+000023090909      *   Ind.   Description
+000024090909      *-------------------------------------------------------------------
+000025090909      *   xx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+000026090909      *
+000027090909      *
+000028090909      ********************************************************************
+000100090909     A          R EMLLOGMR
+000200090909     A            EXFILE        10A         COLHDG('File Name')
+000300090909     A            EXEMAD        52A         COLHDG('Email Address')
+000400090909     A            EXBODY       256A         COLHDG('Email Body')
+000500090909     A            EXLDTE         7S 0       COLHDG('Last Update Date')
+000600090909     A            EXLTIM         6S 0       COLHDG('Last Update Time')
+000700090909     A            EXLUSR        10A         COLHDG('Last Update User')
+000800090909     A            EXLPGM        10A         COLHDG('Last Update Program')

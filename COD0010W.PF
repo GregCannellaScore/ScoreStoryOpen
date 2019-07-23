@@ -1,0 +1,44 @@
+000100000000      ********************************************************************
+000200000000      *
+000300000000      *  File.......: COD0010W
+000400000000      *
+000500170813      *  Description: Download a codes category
+000600000000      *
+000700170813      *  Programmer.: Greg Cannella
+000800000000      *
+000900170813      *  Date.......:
+001000000000      *
+001100000000      ********************************************************************
+001200000000      *                   Modification Log
+001300000000      *
+001400000000      *  Initials  Date    Description
+001500000000      *-------------------------------------------------------------------
+001600000000      *    XXX   MM/DD/YY  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxx
+001700000000      *
+001800000000      *
+001900000000      *
+002000000000      ********************************************************************
+002100000000      *                   Indicator Usage (Display)
+002200000000      *
+002300000000      *   Ind.  Description
+002400000000      *-------------------------------------------------------------------
+002500000000      *    xx   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+002600000000      *
+002700000000      *
+002800000000      ********************************************************************
+002900000000     A                                      REF(REFERENCE)
+003000000000     A          R COD0010WR
+003100000000     A            CCCATC    R               REFFLD(RFCODE)
+003200000000     A                                      COLHDG('Code' 'Category')
+003300000000     A            CCCATK    R               REFFLD(RFCODK)
+003400000000     A                                      COLHDG('Code' 'Cat' 'Key')
+003500000000     A            CCCATD    R               REFFLD(RFCODD)
+003600000000     A                                      COLHDG('Code' 'Cat' 'Data')
+003700000000     A            CCLPGM    R               REFFLD(RFPGM)
+003800000000     A                                      COLHDG('Last' 'Update' 'Program')
+003900000000     A            CCLUSR    R               REFFLD(RFUSER)
+004000000000     A                                      COLHDG('Last' 'Update' 'User')
+004100000000     A            CCLDTE    R               REFFLD(RFDATE)
+004200000000     A                                      COLHDG('Last' 'Update' 'Date')
+004300000000     A            CCLTIM    R               REFFLD(RFTIME)
+004400000000     A                                      COLHDG('Last' 'Update' 'Time')

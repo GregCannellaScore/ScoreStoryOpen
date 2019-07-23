@@ -1,0 +1,12 @@
+000100190407             PGM        PARM(&SQL &EMAIL)
+000200190407
+000300190407             DCL        VAR(&SQL) TYPE(*CHAR) LEN(5000)
+000400190407             DCL        VAR(&EMAIL) TYPE(*CHAR) LEN(100)
+000500190407
+000600190407             RUNIQRY    SQL(&sql) +
+000700190407                          OUTPUT(*EXCEL) +
+000800190407                          EMAIL(&email) +
+000900190407                          SUBJECT('Your SQL Result') +
+001000190407                          EMAILCMD(*SENDMAIL)
+001100190407
+001200190407             ENDPGM

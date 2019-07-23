@@ -1,0 +1,25 @@
+000100081209     A*****************************************************************
+000200081209     A*                                                               *
+000300081209     A* Program ID...... CODUSRM                                      *
+000400081209     A* Program Desc.... List of users who allowed to maintain        *
+000500081209     A*                  category                                     *
+000600170813     A* Written By...... Greg Cannella                                *
+000700170813     A* Date Written....                                              *
+000800081209     A*                                                               *
+000900081209     A*****************************************************************
+001000081210     A                                      REF(REFERENCE)
+001100081210     A                                      UNIQUE
+001200081209     A          R CODUSRR                   TEXT('Users allowed to maintain cat-
+001300081210     A                                      egory code')
+001400081210     A            CUUSER    R               REFFLD(RFUSER)
+001500081210     A                                      COLHDG('User')
+001600081210     A            CUCATC    R               REFFLD(RFCODE)
+001700081210     A                                      COLHDG('Code Category')
+001800081210     A            CULUSR    R               REFFLD(RFUSER)
+001900081210     A                                      COLHDG('Last' 'Update' 'User')
+002000081210     A            CULDTE    R               REFFLD(RFDATE)
+002100081210     A                                      COLHDG('Last' 'Update' 'Date')
+002200081210     A            CULTIM    R               REFFLD(RFTIME)
+002300081210     A                                      COLHDG('Last' 'Update' 'Time')
+002400081209     A          K CUUSER
+002500081209     A          K CUCATC

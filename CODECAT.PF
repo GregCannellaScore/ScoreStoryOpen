@@ -1,0 +1,47 @@
+000100080303      ********************************************************************
+000200080303      *
+000300080324      *  File: CODECAT
+000400080303      *
+000500080324      *  Description: Codes Category File
+000600080303      *
+000700080303      *  Programmer: Greg Cannella
+000800080303      *
+000900080303      *  Date: 3/3/08
+001000080303      *
+001100080303      ********************************************************************
+001200080303      *                   Modification Log
+001300080303      *
+001400080303      *  Initials  Date      Description
+001500080303      *-------------------------------------------------------------------
+001600080303      *   xxx    xx/xx/xx  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+001700080303      *
+001800080303      *
+001900080303      *
+002000080303      ********************************************************************
+002100080303      *                   Indicator Usage (Display)
+002200080303      *
+002300080303      *   Ind.   Description
+002400080303      *-------------------------------------------------------------------
+002500080303      *   xx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+002600080303      *
+002700080303      *
+002800080303      ********************************************************************
+002900080303     A                                      REF(REFERENCE)
+003000080303     A                                      UNIQUE
+003100080324     A          R @CODECAT
+003101080325     A            CCCATC    R               REFFLD(RFCODE)
+003102080324     A                                      COLHDG('Code' 'Category')
+003103080325     A            CCCATK    R               REFFLD(RFCODK)
+003104080324     A                                      COLHDG('Code' 'Cat' 'Key')
+003105080325     A            CCCATD    R               REFFLD(RFCODD)
+003106080324     A                                      COLHDG('Code' 'Cat' 'Data')
+003107080324     A            CCLPGM    R               REFFLD(RFPGM)
+003108080324     A                                      COLHDG('Last' 'Update' 'Program')
+003109080324     A            CCLUSR    R               REFFLD(RFUSER)
+003110080324     A                                      COLHDG('Last' 'Update' 'User')
+003111080324     A            CCLDTE    R               REFFLD(RFDATE)
+003112080324     A                                      COLHDG('Last' 'Update' 'Date')
+003113080324     A            CCLTIM    R               REFFLD(RFTIME)
+003114080324     A                                      COLHDG('Last' 'Update' 'Time')
+005400080325     A          K CCCATC
+005500080325     A          K CCCATK
