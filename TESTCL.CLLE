@@ -1,4 +1,0 @@
-000100160103testcl: pgm
-000200160103             SNDPGMMSG  MSGID(CPF9897) MSGF(QCPFMSG) MSGDTA('Hello +
-000300160103                          World')
-000400160103endpgm: endpgm
